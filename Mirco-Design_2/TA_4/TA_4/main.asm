@@ -12,18 +12,18 @@ MAIN:
 	OUT		SPL, R16
 
 	SBI		DDRB, 2		; Set PORTB.2 as output
-	LDI		R16, (1<<2)
+	LDI		R16, (1<<2)	; Value for toggling the LED
 	LDI		R17, 0x00
 	OUT		PORTB, R17	; Clear PORTB register
-	LDI		R20, -244
-	OUT		TCNT0, R20	; Load 12 into TCNT0
+	LDI		R20, -122
+	OUT		TCNT0, R20	; Load 134 into TCNT0
 	LDI		R20, (1<<TOIE0)
 	STS		TIMSK0, R20	; Enable TIMER0 interrupt for OVF
 	SEI					; Enable interrupts
 	LDI		R20, 0x00
-	STS		TCCR0A, R20
+	OUT		TCCR0A, R20
 	LDI		R20, 0x05
-	STS		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
+	OUT		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
 LOOP:
 	RJMP	LOOP		; Infinite loop (Wait until TIMER0_OVF interrupts)
 
@@ -34,6 +34,6 @@ TIMER0_OVF_ISR:
 	OUT		TIFR0, R20
 	EOR		R17, R16		; Toggle PORTB.2
 	OUT		PORTB, R17
-	LDI		R20, -244
+	LDI		R20, -122
 	OUT		TCNT0, R20		; Reset TCNT0
 	RETI
