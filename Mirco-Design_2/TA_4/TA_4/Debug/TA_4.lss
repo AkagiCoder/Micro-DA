@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Sun Mar 04 13:41:34 2018
+AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Sun Mar 04 13:57:38 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
@@ -1003,17 +1003,18 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Sun
 000109 bd46                      	OUT		TCNT0, R20	; Load 12 into TCNT0
 00010a e041                      	LDI		R20, (1<<TOIE0)
 00010b 9340 006e                 	STS		TIMSK0, R20	; Enable TIMER0 interrupt for OVF
-00010d e040                      	LDI		R20, 0x00
-00010e 9340 0024                 	STS		TCCR0A, R20
-000110 e045                      	LDI		R20, 0x05
-000111 9340 0025                 	STS		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
+00010d 9478                      	SEI					; Enable interrupts
+00010e e040                      	LDI		R20, 0x00
+00010f 9340 0024                 	STS		TCCR0A, R20
+000111 e045                      	LDI		R20, 0x05
+000112 9340 0025                 	STS		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
                                  LOOP:
-000113 cfff                      	RJMP	LOOP		; Infinite loop (Wait until TIMER0_OVF interrupts
+000114 cfff                      	RJMP	LOOP		; Infinite loop (Wait until TIMER0_OVF interrupts)
                                  
                                  .ORG 0x0200
                                  	; ISR for toggling PORTB.2
                                  TIMER0_OVF_ISR:
-000200 e041                      	LDI		R20, (1<<TOV0)	; Cler TOV flag
+000200 e041                      	LDI		R20, (1<<TOV0)	; Clear TOV flag
 000201 bb45                      	OUT		TIFR0, R20
 000202 2710                      	EOR		R17, R16		; Toggle PORTB.2
 000203 b915                      	OUT		PORTB, R17
@@ -1060,15 +1061,15 @@ neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   7 pop   :   0
 push  :   0 rcall :   0 ret   :   0 reti  :   1 rjmp  :   1 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   1 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
-sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 8 out of 113 (7.1%)
+Instructions used: 9 out of 113 (8.0%)
 
 "ATmega328" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00040e     62      0     62   32768   0.2%
+[.cseg] 0x000000 0x00040e     64      0     64   32768   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

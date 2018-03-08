@@ -23,7 +23,7 @@
  </OUTPUT_FILES>
  <LABELS>
   <MAIN><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm</FILE><LINE>7</LINE></MAIN>
-  <TIMER0_OVF_ISR><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm</FILE><LINE>31</LINE></TIMER0_OVF_ISR>
-  <LOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm</FILE><LINE>26</LINE></LOOP>
+  <TIMER0_OVF_ISR><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm</FILE><LINE>32</LINE></TIMER0_OVF_ISR>
+  <LOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm</FILE><LINE>27</LINE></LOOP>
  </LABELS>
 </ASSEMBLER_INFO>

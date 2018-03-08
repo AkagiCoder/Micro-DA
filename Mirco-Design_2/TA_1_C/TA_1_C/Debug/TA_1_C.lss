@@ -21,9 +21,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  00000034  00000000  00000000  00001084  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000342  00000000  00000000  000010b8  2**0
+  9 .debug_str    00000340  00000000  00000000  000010b8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000018  00000000  00000000  000013fa  2**0
+ 10 .debug_ranges 00000018  00000000  00000000  000013f8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -70,16 +70,16 @@ Disassembly of section .text:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <T1Delay>:
-// Function that uses Timer1
-// F = 1 MHz
+// Function that uses Timer1 [Delay for 0.25 second]
+// F = 0.5 MHz
 void T1Delay()
 {
-	// Set the TCNT1 = 0x85EE (34286)
-	TCNT1H = 0x85;
-  80:	85 e8       	ldi	r24, 0x85	; 133
+	// Set the TCNT1 = 0xC2F7 [65536-15625 = 49911]
+	TCNT1H = 0xC2;
+  80:	82 ec       	ldi	r24, 0xC2	; 194
   82:	80 93 85 00 	sts	0x0085, r24	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
-	TCNT1L = 0xEE;
-  86:	8e ee       	ldi	r24, 0xEE	; 238
+	TCNT1L = 0xF7;
+  86:	87 ef       	ldi	r24, 0xF7	; 247
   88:	80 93 84 00 	sts	0x0084, r24	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
 	// Start clock using prescalar 8
 	TCCR1A = 0x00;
@@ -108,7 +108,7 @@ int main(void)
   a4:	15 b8       	out	0x05, r1	; 5
 	while(1)
 	{
-		T1Delay();
+		T1Delay();		// Call delay
 		PORTB ^= 0x04;	// Toggle the LED
   a6:	c4 e0       	ldi	r28, 0x04	; 4
 {
@@ -116,7 +116,7 @@ int main(void)
 	PORTB = 0x00;		// Clear PORTB
 	while(1)
 	{
-		T1Delay();
+		T1Delay();		// Call delay
   a8:	0e 94 40 00 	call	0x80	; 0x80 <T1Delay>
 		PORTB ^= 0x04;	// Toggle the LED
   ac:	85 b1       	in	r24, 0x05	; 5

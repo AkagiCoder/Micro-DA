@@ -1,35 +1,39 @@
 #include <avr/io.h>
 
-void T0Delay();
+void T1Delay();
 
 int main(void)
 {
-	// Port initialization
-	DDRD = 0x00;		// Set PORTD as an input
-	PORTD = 0x04;		// Pull up the resistor of PORTD.2
-	DDRB = 0x04;		// Set PORTB.2 as an output
+	DDRD = 0x00;		// Set PORTD.2 as input
+	PORTD |= (1<<2);	// Pull up the resistor of PORTD.2
+	DDRB = 0xFF;		// Set PORTB.2 as output
+	PORTB = 0x00;		// Clear PORTB
+	
+	// Poll until switch is pressed
 	while(1)
 	{
-		if((PIND&0x04) == 0x04)
+		if((PIND&0x04) == 0x00)
 		{
-			PORTB |= 0x04;
-			T0Delay();
-			PORTB &= 0xFB;
+			PORTB = (1<<2);				// Turn on LED
+			while((PIND&0x04) == 0x00);	// Poll until switch is turned off
+			T1Delay();					// Call the delay after switch is turned off
 		}
+		PORTB = 0x00;					// Turn off LED
 	}
+	return 0;
 }
 
-// Delay subroutine for Timer0
-// F = 1 Mhz
-void T0Delay()
+// Delay subroutine for Timer1 [Delay for 1 second]
+// F = 0.5 MHz
+void T1Delay()
 {
-	// Set the TCNT1 = 0xC2F7
-	TCNT1H = C2;
-	TCNT1L = F7;
-	// Start Timer1 with prescalar 64
+	// Set the TCNT1 = 65536-62500 = 3036 [0xBDC]
+	TCNT1H = 0x0B;
+	TCNT1L = 0xDC;
+	// Start Timer1 with prescalar 8
 	TCCR1A = 0x00;
-	TCCR1B = 0x03;
-	while((TIFR1&0x01)== 0);	// Loop until TOV flag is set
-	TCCR1B = 0x00;				// Stop the timer
-	TIFR1 |= 0x01;				// Reset TOV flag
+	TCCR1B = 0x02;
+	while((TIFR1&(1<<TOV1)) == 0x00);	// Check TOV flag
+	TCCR1B = 0x00;						// Stop Timer1
+	TIFR1 |= (1<<TOV1);					// Reset TOV flag in TIFR1 register
 }

@@ -8,19 +8,19 @@ int main(void)
 	PORTB = 0x00;		// Clear PORTB
 	while(1)
 	{
-		T1Delay();
+		T1Delay();		// Call delay
 		PORTB ^= 0x04;	// Toggle the LED
 	}
 	return 0;
 }
 
-// Function that uses Timer1
-// F = 1 MHz
+// Function that uses Timer1 [Delay for 0.25 second]
+// F = 0.5 MHz
 void T1Delay()
 {
-	// Set the TCNT1 = 0x85EE (34286)
-	TCNT1H = 0x85;
-	TCNT1L = 0xEE;
+	// Set the TCNT1 = 0xC2F7 [65536-15625 = 49911]
+	TCNT1H = 0xC2;
+	TCNT1L = 0xF7;
 	// Start clock using prescalar 8
 	TCCR1A = 0x00;
 	TCCR1B = 0x02;

@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.7  C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_2\TA_2\main.asm Wed Mar 07 17:30:56 2018
+AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm Sun Mar 04 14:09:34 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
                                  
-                                 .ORG 0
+                                 .ORG 0x0000
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328.xml ***********
                                  ;*************************************************************************
@@ -983,49 +983,30 @@ AVRASM ver. 2.2.7  C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_2\TA_2\main.asm Wed M
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
+000000 940c 0100                 	JMP MAIN
+                                 .ORG 0x0006
+000006 940c 0200                 	JMP ISR_INT0
+                                 
+                                 .ORG 0x0100
+                                 MAIN:
                                  	; Initialize stack
-000000 e008                      	LDI		R16, HIGH(RAMEND)
-000001 bf0e                      	OUT		SPH, R16
-000002 ef0f                      	LDI		R16, LOW(RAMEND)
-000003 bf0d                      	OUT		SPL, R16
-                                 
-                                 	; Port initialization
-000004 9852                      	CBI		DDRD, 2		; Set PORTD.2 as an input
-000005 9a5a                      	SBI		PORTD, 2	; Pull up the resistor of PORTD.2
-000006 9a22                      	SBI		DDRB, 2		; Set PORTB.2 as an output
-                                 
-                                 POLL:
-000007 994a                      	SBIC	PIND, 2		; Poll until PIND.2 is low
-000008 cffe                      	RJMP	POLL
-000009 9a2a                      	SBI		PORTB, 2	; Light up the LED
-                                 HOLD:
-00000a 9b4a                      	SBIS	PIND, 2		; Poll until the user lets go of the switch
-00000b cffe                      	RJMP	HOLD
-00000c 940e 0010                 	CALL	DELAY		; Delay for 1 second after switch is off
-00000e 982a                      	CBI		PORTB, 2	; Turn off the LED
-00000f cff7                      	RJMP	POLL
-                                 
-                                 	; Delay subroutine (F = 0.5 MHz) [Delay for 1 second]
-                                 DELAY:
-                                 	; Set the TCNT1 = 65536-62500 = 3036
-000010 e04b                      	LDI		R20, HIGH(-62500)
-000011 9340 0085                 	STS		TCNT1H, R20
-000013 ed4c                      	LDI		R20, LOW(-62500)
-000014 9340 0084                 	STS		TCNT1L, R20
-                                 	; Set timer control register
-000016 e040                      	LDI		R20, 0x00
-000017 9340 0080                 	STS		TCCR1A, R20
-000019 e042                      	LDI		R20, 0x02
-00001a 9340 0081                 	STS		TCCR1B, R20	; Start the timer with a prescalar of 8
+000100 e008                      	LDI		R16, HIGH(RAMEND)
+000101 bf0e                      	OUT		SPH, R16
+000102 ef0f                      	LDI		R16, LOW(RAMEND)
+000103 bf0d                      	OUT		SPL, R16
+000104 9852                      	CBI		DDRD, 2				; Set PORTD.2 as input
+000105 9a5a                      	SBI		PORTD, 2			; Pull the resistor of PORTD.2
+000106 9a22                      	SBI		DDRB, 2				; Set PORTB.2 as output
+000107 982a                      	CBI		PORTB, 2			; Clear PORTB.2
+000108 e001                      	LDI		R16, (1<<INT0)
+000109 9300 001d                 	STS		EIMSK, R16			; Enable INT0 interrupt
+00010b e002                      	LDI		R16, 0x02
+00010c 9300 0069                 	STS		EICRA, R16			; INT0 interrupt occurs on the falling edge
+00010e 9478                      	SEI
                                  LOOP:
-00001c b346                      	IN		R20, TIFR1	; Check for the TOV flag
-00001d ff40                      	SBRS	R20, TOV0
-00001e cffd                      	RJMP	LOOP
-                                 	; Stop timer and clear TOV flag
-00001f e040                      	LDI		R20, 0x0
-000020 9340 0081                 	STS		TCCR1B, R20
-000022 e041                      	LDI		R20, (1<<TOV0)
-000023 bb46                      	OUT		TIFR1, R20
+00010f cfff                      	RJMP	LOOP
+                                 .ORG 0x0200
+                                 ISR_INT0:
 
 
 RESOURCE USE INFORMATION
@@ -1045,10 +1026,10 @@ counted separately from r26..r31 here.
 "ATmega328" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   4 r17:   0 r18:   0 r19:   0 r20:  14 
+r13:   0 r14:   0 r15:   0 r16:   8 r17:   0 r18:   0 r19:   0 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 2 out of 35 (5.7%)
+Registers used: 1 out of 35 (2.9%)
 
 "ATmega328" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
@@ -1056,26 +1037,26 @@ andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   2 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   2 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   0 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :   8 lds   :   0 lpm   :   0 lsl   :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   2 
+ld    :   0 ldd   :   0 ldi   :   4 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   3 pop   :   0 
-push  :   0 rcall :   0 ret   :   1 reti  :   0 rjmp  :   4 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   3 sbic  :   1 sbis  :   1 
-sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
-sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   5 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   2 pop   :   0 
+push  :   0 rcall :   0 ret   :   0 reti  :   0 rjmp  :   1 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   0 
+sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
+sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   2 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 12 out of 113 (10.6%)
+Instructions used: 8 out of 113 (7.1%)
 
 "ATmega328" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00004a     74      0     74   32768   0.2%
+[.cseg] 0x000000 0x000400     40      0     40   32768   0.1%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

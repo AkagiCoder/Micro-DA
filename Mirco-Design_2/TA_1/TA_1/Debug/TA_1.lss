@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_1\TA_1\main.asm Sat Mar 03 20:49:22 2018
+AVRASM ver. 2.2.7  C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_1\TA_1\main.asm Wed Mar 07 17:39:13 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
@@ -1001,12 +1001,13 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_1\TA_1\main.asm Sat
 00000a b915                      	OUT		PORTB, R17	; Output the toggled signal
 00000b cffc                      	RJMP	BEGIN
                                  
-                                 	; Delay subroutine using Timer1 (F = 1 MHz)
+                                 	; Delay for 0.25 second
+                                 	; Delay subroutine using Timer1 (F = 0.5 MHz)
                                  DELAY:
-                                 	; Set the TCNT1 = 0x85EE (34286)
-00000c e845                      	LDI		R20, 0x85
+                                 	; Set the TCNT1 = 65536-15625 = 49911
+00000c ec42                      	LDI		R20, HIGH(-15625)
 00000d 9340 0085                 	STS		TCNT1H, R20
-00000f ee4e                      	LDI		R20, 0xEE
+00000f ef47                      	LDI		R20, LOW(-15625)
 000010 9340 0084                 	STS		TCNT1L, R20
                                  	; Start the timer with a prescalar of 8
 000012 e040                      	LDI		R20, 0x00

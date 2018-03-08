@@ -1,4 +1,5 @@
 .ORG 0
+	; Initialize stack
 	LDI		R16, HIGH(RAMEND)
 	OUT		SPH, R16
 	LDI		R16, LOW(RAMEND)
@@ -13,27 +14,30 @@ POLL:
 	SBIC	PIND, 2		; Poll until PIND.2 is low
 	RJMP	POLL
 	SBI		PORTB, 2	; Light up the LED
-	CALL	DELAY		; Delay for 1 second
+HOLD:
+	SBIS	PIND, 2		; Poll until the user lets go of the switch
+	RJMP	HOLD
+	CALL	DELAY		; Delay for 1 second after switch is off
 	CBI		PORTB, 2	; Turn off the LED
 	RJMP	POLL
 
-	; Delay subroutine (F = 1 MHz)
+	; Delay subroutine (F = 0.5 MHz) [Delay for 1 second]
 DELAY:
-	; Set the TCNT1 = 0xC2F7 (49911) [65546-15625 = 49911]
-	LDI		R20, HIGH(-15625)
+	; Set the TCNT1 = 65536-62500 = 3036
+	LDI		R20, HIGH(-62500)
 	STS		TCNT1H, R20
-	LDI		R20, LOW(-15625)
+	LDI		R20, LOW(-62500)
 	STS		TCNT1L, R20
 	; Set timer control register
 	LDI		R20, 0x00
 	STS		TCCR1A, R20
-	LDI		R20, 0x03
-	STS		TCCR1B, R20	; Start the timer with a prescalar of 64
+	LDI		R20, 0x02
+	STS		TCCR1B, R20	; Start the timer with a prescalar of 8
 LOOP:
-	IN		R20, TIFR1
+	IN		R20, TIFR1	; Check for the TOV flag
 	SBRS	R20, TOV0
 	RJMP	LOOP
-	; Stop timer and reset TOV flag
+	; Stop timer and clear TOV flag
 	LDI		R20, 0x0
 	STS		TCCR1B, R20
 	LDI		R20, (1<<TOV0)

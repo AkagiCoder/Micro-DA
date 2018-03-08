@@ -19,6 +19,7 @@ MAIN:
 	OUT		TCNT0, R20	; Load 12 into TCNT0
 	LDI		R20, (1<<TOIE0)
 	STS		TIMSK0, R20	; Enable TIMER0 interrupt for OVF
+	SEI					; Enable interrupts
 	LDI		R20, 0x00
 	STS		TCCR0A, R20
 	LDI		R20, 0x05

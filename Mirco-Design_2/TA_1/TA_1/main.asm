@@ -17,12 +17,13 @@ BEGIN:
 	OUT		PORTB, R17	; Output the toggled signal
 	RJMP	BEGIN
 
-	; Delay subroutine using Timer1 (F = 1 MHz)
+	; Delay for 0.25 second
+	; Delay subroutine using Timer1 (F = 0.5 MHz)
 DELAY:
-	; Set the TCNT1 = 0x85EE (34286)
-	LDI		R20, 0x85
+	; Set the TCNT1 = 65536-15625 = 49911
+	LDI		R20, HIGH(-15625)
 	STS		TCNT1H, R20
-	LDI		R20, 0xEE
+	LDI		R20, LOW(-15625)
 	STS		TCNT1L, R20
 	; Start the timer with a prescalar of 8
 	LDI		R20, 0x00

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Sat Mar 03 20:50:23 2018
+AVRASM ver. 2.2.7  C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Wed Mar 07 17:35:12 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
@@ -983,6 +983,7 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Sat
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
+                                 	; Initialize the stack
 000000 e008                      	LDI		R16, HIGH(RAMEND)
 000001 bf0e                      	OUT		SPH, R16
 000002 ef0f                      	LDI		R16, LOW(RAMEND)
@@ -990,7 +991,7 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Sat
                                  
 000004 9a22                      	SBI		DDRB, 2		; Set PORTB as output
 000005 e004                      	LDI		R16, (1<<2)	; Output signal of PORTB
-000006 e010                      	LDI		R17, 0x0
+000006 e014                      	LDI		R17, 0x04
 000007 b915                      	OUT		PORTB, R17	; Clear PORTB
                                  
                                  	; Toggle PB2
@@ -1000,26 +1001,27 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Sat
 00000a b915                      	OUT		PORTB, R17	; Output the toggled signal
 00000b cffc                      	RJMP	BEGIN
                                  
-                                 	; Delay subroutine using Timer0 (F = 1 MHz)
+                                 	; Delay for 0.25 second
+                                 	; Delay subroutine using Timer0 (F = 0.5 MHz)
                                  DELAY:
-                                 	; Set TCNT0 = 244
-00000c e04c                      	LDI		R20, -244
-00000d bd46                      	OUT		TCNT0, R20
+                                 	; Set TCNT0 = 256-122 = 134
+00000c e846                      	LDI		R20, -122
+00000d 9340 0026                 	STS		TCNT0, R20
                                  	; Start the timer with a prescalar of 1024
-00000e e040                      	LDI		R20, 0x00
-00000f 9340 0024                 	STS		TCCR0A, R20
-000011 e045                      	LDI		R20, 0x05
-000012 9340 0025                 	STS		TCCR0B, R20
-                                 	; Delay for 244 cycles
+00000f e040                      	LDI		R20, 0x00
+000010 9340 0024                 	STS		TCCR0A, R20
+000012 e045                      	LDI		R20, 0x05
+000013 9340 0025                 	STS		TCCR0B, R20
+                                 	; Delay for 134 cycles by checking the TOV0 flag
                                  LOOP:
-000014 b345                      	IN		R20, TIFR0
-000015 ff40                      	SBRS	R20, TOV0
-000016 cffd                      	RJMP	LOOP
+000015 b345                      	IN		R20, TIFR0
+000016 ff40                      	SBRS	R20, TOV0
+000017 cffd                      	RJMP	LOOP
                                  	; Stop timer and reset TOV flag
-000017 e040                      	LDI		R20, 0x00
-000018 9340 0025                 	STS		TCCR0B, R20
-00001a e041                      	LDI		R20, (1<<TOV0)
-00001b bb45                      	OUT		TIFR0, R20
+000018 e040                      	LDI		R20, 0x00
+000019 9340 0025                 	STS		TCCR0B, R20
+00001b e041                      	LDI		R20, (1<<TOV0)
+00001c bb45                      	OUT		TIFR0, R20
 
 
 RESOURCE USE INFORMATION
@@ -1057,19 +1059,19 @@ cpi   :   0 cpse  :   0 dec   :   0 eor   :   1 fmul  :   0 fmuls :   0
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 jmp   :   0 
 ld    :   0 ldd   :   0 ldi   :   9 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   6 pop   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   5 pop   :   0 
 push  :   0 rcall :   1 ret   :   1 reti  :   0 rjmp  :   2 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   1 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   4 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 Instructions used: 10 out of 113 (8.8%)
 
 "ATmega328" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00003a     58      0     58   32768   0.2%
+[.cseg] 0x000000 0x00003c     60      0     60   32768   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
