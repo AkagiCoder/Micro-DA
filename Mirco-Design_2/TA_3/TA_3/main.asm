@@ -22,12 +22,12 @@ BEGIN:
 DELAY:
 	; Set TCNT0 = 256-122 = 134
 	LDI		R20, -122
-	STS		TCNT0, R20
+	OUT		TCNT0, R20
 	; Start the timer with a prescalar of 1024
 	LDI		R20, 0x00
-	STS		TCCR0A, R20
+	OUT		TCCR0A, R20
 	LDI		R20, 0x05
-	STS		TCCR0B, R20
+	OUT		TCCR0B, R20
 	; Delay for 134 cycles by checking the TOV0 flag
 LOOP:
 	IN		R20, TIFR0
@@ -35,7 +35,7 @@ LOOP:
 	RJMP	LOOP
 	; Stop timer and reset TOV flag
 	LDI		R20, 0x00
-	STS		TCCR0B, R20
+	OUT		TCCR0B, R20
 	LDI		R20, (1<<TOV0)
 	OUT		TIFR0, R20
 	RET

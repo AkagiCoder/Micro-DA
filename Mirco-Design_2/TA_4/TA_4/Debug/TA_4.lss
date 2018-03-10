@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Wed Mar 07 23:50:40 2018
+AVRASM ver. 2.2.7  C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Thu Mar 08 16:36:36 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
@@ -999,7 +999,7 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Wed
 000105 e004                      	LDI		R16, (1<<2)	; Value for toggling the LED
 000106 e010                      	LDI		R17, 0x00
 000107 b915                      	OUT		PORTB, R17	; Clear PORTB register
-000108 e846                      	LDI		R20, -122
+000108 e846                      	LDI		R20, -122	; 256-122 = 134 cycles (DELAY)
 000109 bd46                      	OUT		TCNT0, R20	; Load 134 into TCNT0
 00010a e041                      	LDI		R20, (1<<TOIE0)
 00010b 9340 006e                 	STS		TIMSK0, R20	; Enable TIMER0 interrupt for OVF
@@ -1007,7 +1007,7 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_4\TA_4\main.asm Wed
 00010e e040                      	LDI		R20, 0x00
 00010f bd44                      	OUT		TCCR0A, R20
 000110 e045                      	LDI		R20, 0x05
-000111 bd45                      	OUT		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
+000111 bd45                      	OUT		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 0.5 MHz)
                                  LOOP:
 000112 cfff                      	RJMP	LOOP		; Infinite loop (Wait until TIMER0_OVF interrupts)
                                  

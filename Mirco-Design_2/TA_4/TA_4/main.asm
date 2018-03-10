@@ -15,7 +15,7 @@ MAIN:
 	LDI		R16, (1<<2)	; Value for toggling the LED
 	LDI		R17, 0x00
 	OUT		PORTB, R17	; Clear PORTB register
-	LDI		R20, -122
+	LDI		R20, -122	; 256-122 = 134 cycles (DELAY)
 	OUT		TCNT0, R20	; Load 134 into TCNT0
 	LDI		R20, (1<<TOIE0)
 	STS		TIMSK0, R20	; Enable TIMER0 interrupt for OVF
@@ -23,7 +23,7 @@ MAIN:
 	LDI		R20, 0x00
 	OUT		TCCR0A, R20
 	LDI		R20, 0x05
-	OUT		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 1 MHz)
+	OUT		TCCR0B, R20	; Start TIMER0 with a prescalar of 1024 (F = 0.5 MHz)
 LOOP:
 	RJMP	LOOP		; Infinite loop (Wait until TIMER0_OVF interrupts)
 

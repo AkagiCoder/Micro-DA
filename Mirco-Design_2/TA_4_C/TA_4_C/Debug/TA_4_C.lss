@@ -1,0 +1,138 @@
+
+TA_4_C.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  0000011e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000000ca  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  0000011e  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000150  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000028  00000000  00000000  0000018c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000692  00000000  00000000  000001b4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000610  00000000  00000000  00000846  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000021e  00000000  00000000  00000e56  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000048  00000000  00000000  00001074  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000344  00000000  00000000  000010bc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000049  00000000  00000000  00001400  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000018  00000000  00000000  00001449  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 4d 00 	jmp	0x9a	; 0x9a <__vector_16>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
+  78:	0c 94 63 00 	jmp	0xc6	; 0xc6 <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <main>:
+#include <avr/interrupt.h>
+
+
+int main(void)
+{
+	DDRB = (1<<2);			// Set PORTB.2 as output
+  80:	84 e0       	ldi	r24, 0x04	; 4
+  82:	84 b9       	out	0x04, r24	; 4
+	PORTB = 0x00;			// Clear PORTB
+  84:	15 b8       	out	0x05, r1	; 5
+	TCNT0 = 0x86;			// Set TCNT0 = 134 (DELAY)
+  86:	86 e8       	ldi	r24, 0x86	; 134
+  88:	86 bd       	out	0x26, r24	; 38
+	TIMSK0 = (1<<TOIE0);	// Enable TIMER0 interrupt for OVF
+  8a:	81 e0       	ldi	r24, 0x01	; 1
+  8c:	80 93 6e 00 	sts	0x006E, r24	; 0x80006e <__TEXT_REGION_LENGTH__+0x7e006e>
+	sei();					// Enable global interrupts
+  90:	78 94       	sei
+	TCCR0A = 0x00;
+  92:	14 bc       	out	0x24, r1	; 36
+	TCCR0B = 0x05;			// Start TIMER0 with a prescalar of 1024 (F = 0.5 MHz)
+  94:	85 e0       	ldi	r24, 0x05	; 5
+  96:	85 bd       	out	0x25, r24	; 37
+  98:	ff cf       	rjmp	.-2      	; 0x98 <main+0x18>
+
+0000009a <__vector_16>:
+}
+
+// Subroutine to handle the TIMER0 OVF interrupt
+// Clear TOV, toggle PB.2, and reset TCNT0
+ISR(TIMER0_OVF_vect)
+{
+  9a:	1f 92       	push	r1
+  9c:	0f 92       	push	r0
+  9e:	0f b6       	in	r0, 0x3f	; 63
+  a0:	0f 92       	push	r0
+  a2:	11 24       	eor	r1, r1
+  a4:	8f 93       	push	r24
+  a6:	9f 93       	push	r25
+	TIFR0 = (1<<TOV0);		// Clear TOV flag
+  a8:	81 e0       	ldi	r24, 0x01	; 1
+  aa:	85 bb       	out	0x15, r24	; 21
+	PORTB ^= (1<<2);		// Toggle PORTB.2
+  ac:	95 b1       	in	r25, 0x05	; 5
+  ae:	84 e0       	ldi	r24, 0x04	; 4
+  b0:	89 27       	eor	r24, r25
+  b2:	85 b9       	out	0x05, r24	; 5
+	TCNT0 = 0x86;			// Reset TCNT0 count back to 134
+  b4:	86 e8       	ldi	r24, 0x86	; 134
+  b6:	86 bd       	out	0x26, r24	; 38
+}
+  b8:	9f 91       	pop	r25
+  ba:	8f 91       	pop	r24
+  bc:	0f 90       	pop	r0
+  be:	0f be       	out	0x3f, r0	; 63
+  c0:	0f 90       	pop	r0
+  c2:	1f 90       	pop	r1
+  c4:	18 95       	reti
+
+000000c6 <_exit>:
+  c6:	f8 94       	cli
+
+000000c8 <__stop_program>:
+  c8:	ff cf       	rjmp	.-2      	; 0xc8 <__stop_program>
