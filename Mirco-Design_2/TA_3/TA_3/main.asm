@@ -7,7 +7,7 @@
 
 	SBI		DDRB, 2		; Set PORTB as output
 	LDI		R16, (1<<2)	; Output signal of PORTB
-	LDI		R17, 0x04
+	LDI		R17, 0x00
 	OUT		PORTB, R17	; Clear PORTB
 
 	; Toggle PB2

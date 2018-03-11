@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Wed Mar 07 23:18:36 2018
+AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Sat Mar 10 18:39:20 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc'
@@ -991,7 +991,7 @@ AVRASM ver. 2.2.7  C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_3\TA_3\main.asm Wed
                                  
 000004 9a22                      	SBI		DDRB, 2		; Set PORTB as output
 000005 e004                      	LDI		R16, (1<<2)	; Output signal of PORTB
-000006 e014                      	LDI		R17, 0x04
+000006 e010                      	LDI		R17, 0x00
 000007 b915                      	OUT		PORTB, R17	; Clear PORTB
                                  
                                  	; Toggle PB2

@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.7</VERSION>
  <DEVICE>"ATmega328"</DEVICE>
- <WORKING_DIR>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc</DIR>
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\Debug\TA_5.obj</FILE>
+  <FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\Debug\TA_5.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>TA_5.hex</FILE>
@@ -22,11 +22,11 @@
   <FILE>TA_5.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <MAIN><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>6</LINE></MAIN>
-  <ISR_INT0><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>26</LINE></ISR_INT0>
-  <LOOP><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>23</LINE></LOOP>
-  <HOLD><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>28</LINE></HOLD>
-  <DELAY><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>38</LINE></DELAY>
-  <DLOOP><FILE>C:\Users\oit\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>48</LINE></DLOOP>
+  <MAIN><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>6</LINE></MAIN>
+  <ISR_INT0><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>31</LINE></ISR_INT0>
+  <LOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>23</LINE></LOOP>
+  <HOLD><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>33</LINE></HOLD>
+  <DELAY><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>43</LINE></DELAY>
+  <DLOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>53</LINE></DLOOP>
  </LABELS>
 </ASSEMBLER_INFO>

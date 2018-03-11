@@ -16,12 +16,17 @@ MAIN:
 	CBI		PORTB, 2			; Clear PORTB.2
 	; Interrupt register initialization
 	LDI		R16, (1<<INT0)
-	STS		EIMSK, R16			; Enable INT0 interrupt
+	OUT		EIMSK, R16			; Enable INT0 interrupt
 	LDI		R16, 0x02
 	STS		EICRA, R16			; INT0 interrupt occurs on the falling edge
 	SEI
 LOOP:
+	LDI		R16, 0xFF
+	OUT		PINB, R16
+	LDI		R16, 0x00
+	OUT		PINB, R16
 	RJMP	LOOP				; Infinite loop until INT0 interrupt occurs
+
 .ORG 0x0200
 ISR_INT0:
 	SBI		PORTB, 2			; Light up the LED

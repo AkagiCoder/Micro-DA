@@ -21,11 +21,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  00000048  00000000  00000000  00001074  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000344  00000000  00000000  000010bc  2**0
+  9 .debug_str    00000346  00000000  00000000  000010bc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000049  00000000  00000000  00001400  2**0
+ 10 .debug_loc    00000049  00000000  00000000  00001402  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000018  00000000  00000000  00001449  2**0
+ 11 .debug_ranges 00000018  00000000  00000000  0000144b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -80,21 +80,21 @@ int main(void)
 	DDRB = (1<<2);			// Set PORTB.2 as output
   80:	84 e0       	ldi	r24, 0x04	; 4
   82:	84 b9       	out	0x04, r24	; 4
-	PORTB = 0x00;			// Clear PORTB
-  84:	15 b8       	out	0x05, r1	; 5
 	TCNT0 = 0x86;			// Set TCNT0 = 134 (DELAY)
-  86:	86 e8       	ldi	r24, 0x86	; 134
-  88:	86 bd       	out	0x26, r24	; 38
+  84:	86 e8       	ldi	r24, 0x86	; 134
+  86:	86 bd       	out	0x26, r24	; 38
 	TIMSK0 = (1<<TOIE0);	// Enable TIMER0 interrupt for OVF
-  8a:	81 e0       	ldi	r24, 0x01	; 1
-  8c:	80 93 6e 00 	sts	0x006E, r24	; 0x80006e <__TEXT_REGION_LENGTH__+0x7e006e>
+  88:	81 e0       	ldi	r24, 0x01	; 1
+  8a:	80 93 6e 00 	sts	0x006E, r24	; 0x80006e <__TEXT_REGION_LENGTH__+0x7e006e>
 	sei();					// Enable global interrupts
-  90:	78 94       	sei
+  8e:	78 94       	sei
 	TCCR0A = 0x00;
-  92:	14 bc       	out	0x24, r1	; 36
+  90:	14 bc       	out	0x24, r1	; 36
 	TCCR0B = 0x05;			// Start TIMER0 with a prescalar of 1024 (F = 0.5 MHz)
-  94:	85 e0       	ldi	r24, 0x05	; 5
-  96:	85 bd       	out	0x25, r24	; 37
+  92:	85 e0       	ldi	r24, 0x05	; 5
+  94:	85 bd       	out	0x25, r24	; 37
+	PORTB = 0x00;			// Clear PORTB
+  96:	15 b8       	out	0x05, r1	; 5
   98:	ff cf       	rjmp	.-2      	; 0x98 <main+0x18>
 
 0000009a <__vector_16>:
