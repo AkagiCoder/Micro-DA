@@ -21,10 +21,6 @@ MAIN:
 	STS		EICRA, R16			; INT0 interrupt occurs on the falling edge
 	SEI
 LOOP:
-	LDI		R16, 0xFF
-	OUT		PINB, R16
-	LDI		R16, 0x00
-	OUT		PINB, R16
 	RJMP	LOOP				; Infinite loop until INT0 interrupt occurs
 
 .ORG 0x0200
@@ -33,10 +29,10 @@ ISR_INT0:
 HOLD:
 	SBIS	PIND, 2				; Poll until the user lets go of the switch
 	RJMP	HOLD
-	CALL	DELAY
-	CBI		PORTB, 2
+	CALL	DELAY				; Delay for 1 second
+	CBI		PORTB, 2			; Turn off the LED
 	LDI		R21, (1<<INTF0)
-	STS		EIFR, R21
+	STS		EIFR, R21			; Clear interrupt flag
 	RETI
 
 	; Delay subroutine (F = 0.5 MHz) [Delay for 1 second]

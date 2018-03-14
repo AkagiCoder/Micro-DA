@@ -23,10 +23,10 @@
  </OUTPUT_FILES>
  <LABELS>
   <MAIN><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>6</LINE></MAIN>
-  <ISR_INT0><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>31</LINE></ISR_INT0>
+  <ISR_INT0><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>27</LINE></ISR_INT0>
   <LOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>23</LINE></LOOP>
-  <HOLD><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>33</LINE></HOLD>
-  <DELAY><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>43</LINE></DELAY>
-  <DLOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>53</LINE></DLOOP>
+  <HOLD><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>29</LINE></HOLD>
+  <DELAY><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>39</LINE></DELAY>
+  <DLOOP><FILE>C:\Users\Bryan\Desktop\CPE_301_HW\DA_2\TA_5\TA_5\main.asm</FILE><LINE>49</LINE></DLOOP>
  </LABELS>
 </ASSEMBLER_INFO>

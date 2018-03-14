@@ -23,5 +23,5 @@ void T0Delay()
 	TCCR0B = 0x05;		// Start the timer0 with a prescalar of 1024
 	while((TIFR0&0x01) == 0);
 	TCCR0B = 0x00;		// Stop timer0
-	TIFR1 |= (1<<TOV0); // Reset TOV flag
+	TIFR0 |= (1<<TOV0); // Reset TOV flag
 }

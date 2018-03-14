@@ -6,7 +6,7 @@ int main(void)
 {
 	DDRD = 0x00;		// Set PORTD.2 as input
 	PORTD |= (1<<2);	// Pull up the resistor of PORTD.2
-	DDRB = 0xFF;		// Set PORTB.2 as output
+	DDRB = (1<<2);		// Set PORTB.2 as output
 	PORTB = 0x00;		// Clear PORTB
 	
 	// Poll until switch is pressed
@@ -20,6 +20,7 @@ int main(void)
 		}
 		PORTB = 0x00;					// Turn off LED
 	}
+	
 	return 0;
 }
 

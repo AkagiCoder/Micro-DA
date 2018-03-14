@@ -88,8 +88,8 @@ void T0Delay()
   8c:	fe cf       	rjmp	.-4      	; 0x8a <T0Delay+0xa>
 	TCCR0B = 0x00;		// Stop timer0
   8e:	15 bc       	out	0x25, r1	; 37
-	TIFR1 |= (1<<TOV0); // Reset TOV flag
-  90:	b0 9a       	sbi	0x16, 0	; 22
+	TIFR0 |= (1<<TOV0); // Reset TOV flag
+  90:	a8 9a       	sbi	0x15, 0	; 21
   92:	08 95       	ret
 
 00000094 <main>:
