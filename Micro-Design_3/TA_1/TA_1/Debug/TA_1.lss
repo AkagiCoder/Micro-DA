@@ -3,60 +3,62 @@ TA_1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000136  2**0
+  0 .data         00000000  00800100  00800100  000001f8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000e2  00000000  00000000  00000054  2**1
+  1 .text         00000184  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000136  2**0
+  2 .bss          00000001  00800100  00800100  000001f8  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001f8  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000168  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000228  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000028  00000000  00000000  000001a4  2**0
+  5 .debug_aranges 00000030  00000000  00000000  00000264  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000069d  00000000  00000000  000001cc  2**0
+  6 .debug_info   000006ca  00000000  00000000  00000294  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000610  00000000  00000000  00000869  2**0
+  7 .debug_abbrev 00000628  00000000  00000000  0000095e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000226  00000000  00000000  00000e79  2**0
+  8 .debug_line   000002a9  00000000  00000000  00000f86  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000048  00000000  00000000  000010a0  2**2
+  9 .debug_frame  00000074  00000000  00000000  00001230  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000353  00000000  00000000  000010e8  2**0
+ 10 .debug_str    00000368  00000000  00000000  000012a4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000049  00000000  00000000  0000143b  2**0
+ 11 .debug_loc    0000009f  00000000  00000000  0000160c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000018  00000000  00000000  00001484  2**0
+ 12 .debug_ranges 00000020  00000000  00000000  000016ab  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
 
 00000000 <__vectors>:
    0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
-   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  34:	0c 94 55 00 	jmp	0xaa	; 0xaa <__vector_13>
-  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
-  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 88 00 	jmp	0x110	; 0x110 <__vector_13>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 af 00 	jmp	0x15e	; 0x15e <__vector_21>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
 
 00000068 <__ctors_end>:
   68:	11 24       	eor	r1, r1
@@ -65,83 +67,189 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 6f 00 	jmp	0xde	; 0xde <_exit>
 
-0000007c <__bad_interrupt>:
-  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+00000074 <__do_clear_bss>:
+  74:	21 e0       	ldi	r18, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
 
-00000080 <main>:
-#define MYUBRR FOSC/16/BAUD-1
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	a1 30       	cpi	r26, 0x01	; 1
+  80:	b2 07       	cpc	r27, r18
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 48 00 	call	0x90	; 0x90 <main>
+  88:	0c 94 c0 00 	jmp	0x180	; 0x180 <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <main>:
+volatile uint8_t ADCvalue;			// Storage for the temperature in F
 
 int main(void)
 {
 	// Port declarations
 	DDRB = (1<<5);			// Set PORTB.5 as output
-  80:	80 e2       	ldi	r24, 0x20	; 32
-  82:	84 b9       	out	0x04, r24	; 4
+  90:	80 e2       	ldi	r24, 0x20	; 32
+  92:	84 b9       	out	0x04, r24	; 4
 	PORTB = 0x00;			// Clear PORTB
-  84:	15 b8       	out	0x05, r1	; 5
+  94:	15 b8       	out	0x05, r1	; 5
 	
-	// F = 4 MHz
-	//TCNT1L = 0xF7;			// Load lower TCNT1 (0xF7)
-	//TCNT1H = 0xC2;			// Load upper TCNT1 (0xC2)
-	TCNT1 = 34286;
-  86:	8e ee       	ldi	r24, 0xEE	; 238
-  88:	95 e8       	ldi	r25, 0x85	; 133
-  8a:	90 93 85 00 	sts	0x0085, r25	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
-  8e:	80 93 84 00 	sts	0x0084, r24	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
-	TIMSK1 = (1<<TOIE1);	// Enable TIMER1 OVF interrupt
-  92:	81 e0       	ldi	r24, 0x01	; 1
-  94:	80 93 6f 00 	sts	0x006F, r24	; 0x80006f <__TEXT_REGION_LENGTH__+0x7e006f>
-	sei();					// Enable global interrupts
-  98:	78 94       	sei
+	// ADC declaration
+	ADMUX = 0;								// Use ADC0
+  96:	ec e7       	ldi	r30, 0x7C	; 124
+  98:	f0 e0       	ldi	r31, 0x00	; 0
+  9a:	10 82       	st	Z, r1
+	ADMUX |= (1<<ADLAR);					// Left justified
+  9c:	80 81       	ld	r24, Z
+  9e:	80 62       	ori	r24, 0x20	; 32
+  a0:	80 83       	st	Z, r24
+	ADMUX |= (1<<REFS0);					// AVcc is reference
+  a2:	80 81       	ld	r24, Z
+  a4:	80 64       	ori	r24, 0x40	; 64
+  a6:	80 83       	st	Z, r24
+	ADCSRA |= (1<<ADPS2) | (1<<ADPS1);		// 8 MHz with prescalar of 64
+  a8:	ea e7       	ldi	r30, 0x7A	; 122
+  aa:	f0 e0       	ldi	r31, 0x00	; 0
+  ac:	80 81       	ld	r24, Z
+  ae:	86 60       	ori	r24, 0x06	; 6
+  b0:	80 83       	st	Z, r24
+	ADCSRA |= (1<<ADATE);					// Enable auto trigger
+  b2:	80 81       	ld	r24, Z
+  b4:	80 62       	ori	r24, 0x20	; 32
+  b6:	80 83       	st	Z, r24
+	ADCSRB = 0;								// Free running settings for auto trigger
+  b8:	10 92 7b 00 	sts	0x007B, r1	; 0x80007b <__TEXT_REGION_LENGTH__+0x7e007b>
+	ADCSRA |= (1<<ADEN);					// Enable ADC
+  bc:	80 81       	ld	r24, Z
+  be:	80 68       	ori	r24, 0x80	; 128
+  c0:	80 83       	st	Z, r24
+	ADCSRA |= (1<<ADIE);					// Enable ADC interrupt
+  c2:	80 81       	ld	r24, Z
+  c4:	88 60       	ori	r24, 0x08	; 8
+  c6:	80 83       	st	Z, r24
+	ADCSRA |= (1<<ADSC);					// Start conversion
+  c8:	80 81       	ld	r24, Z
+  ca:	80 64       	ori	r24, 0x40	; 64
+  cc:	80 83       	st	Z, r24
+	
+	// USART declaration
+	UBRR0H = ((MYUBRR)>>8);					// Set baud rate for UPPER Register
+  ce:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7e00c5>
+	UBRR0L = MYUBRR;						// Set baud rate for LOWER Register
+  d2:	83 e3       	ldi	r24, 0x33	; 51
+  d4:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
+	UCSR0B |= (1<<TXEN0);					// Enable transmitter
+  d8:	e1 ec       	ldi	r30, 0xC1	; 193
+  da:	f0 e0       	ldi	r31, 0x00	; 0
+  dc:	80 81       	ld	r24, Z
+  de:	88 60       	ori	r24, 0x08	; 8
+  e0:	80 83       	st	Z, r24
+	UCSR0C |= (1<<UCSZ01) | (1<<UCSZ00);	// Frame: 8-bit Data and 1 Stop bit
+  e2:	e2 ec       	ldi	r30, 0xC2	; 194
+  e4:	f0 e0       	ldi	r31, 0x00	; 0
+  e6:	80 81       	ld	r24, Z
+  e8:	86 60       	ori	r24, 0x06	; 6
+  ea:	80 83       	st	Z, r24
+	
+	// F = 8 MHz
+	TCNT1 = 34286;			// 65536-(8 MHz/256)
+  ec:	8e ee       	ldi	r24, 0xEE	; 238
+  ee:	95 e8       	ldi	r25, 0x85	; 133
+  f0:	90 93 85 00 	sts	0x0085, r25	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+  f4:	80 93 84 00 	sts	0x0084, r24	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+	TIMSK1 = (1<<TOIE1);	// Enable TIMER1 OVF interrupt	
+  f8:	81 e0       	ldi	r24, 0x01	; 1
+  fa:	80 93 6f 00 	sts	0x006F, r24	; 0x80006f <__TEXT_REGION_LENGTH__+0x7e006f>
 	TCCR1A = 0x00;
-  9a:	10 92 80 00 	sts	0x0080, r1	; 0x800080 <__TEXT_REGION_LENGTH__+0x7e0080>
-	TCCR1B = 0x04;			// Timer with prescalar 256
-  9e:	84 e0       	ldi	r24, 0x04	; 4
-  a0:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
+  fe:	10 92 80 00 	sts	0x0080, r1	; 0x800080 <__TEXT_REGION_LENGTH__+0x7e0080>
+	TCCR1B = 0x04;			// Start TIMER1 with prescalar 256
+ 102:	84 e0       	ldi	r24, 0x04	; 4
+ 104:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
 	TCCR1C = 0x00;
-  a4:	10 92 82 00 	sts	0x0082, r1	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
-  a8:	ff cf       	rjmp	.-2      	; 0xa8 <main+0x28>
+ 108:	10 92 82 00 	sts	0x0082, r1	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
+	sei();					// Enable global interrupts
+ 10c:	78 94       	sei
+ 10e:	ff cf       	rjmp	.-2      	; 0x10e <main+0x7e>
 
-000000aa <__vector_13>:
-    }
+00000110 <__vector_13>:
 	return 0;
 }
 
+// Interrupt subroutine for TIMER1 overflow (1 second)
 ISR(TIMER1_OVF_vect)
 {
-  aa:	1f 92       	push	r1
-  ac:	0f 92       	push	r0
-  ae:	0f b6       	in	r0, 0x3f	; 63
-  b0:	0f 92       	push	r0
-  b2:	11 24       	eor	r1, r1
-  b4:	8f 93       	push	r24
-  b6:	9f 93       	push	r25
-	TIFR1 = (1<<TOV1);		// Clear TOV1 flag
-  b8:	81 e0       	ldi	r24, 0x01	; 1
-  ba:	86 bb       	out	0x16, r24	; 22
-	PORTB ^= (1<<5);		// Toggle LED
-  bc:	95 b1       	in	r25, 0x05	; 5
-  be:	80 e2       	ldi	r24, 0x20	; 32
-  c0:	89 27       	eor	r24, r25
-  c2:	85 b9       	out	0x05, r24	; 5
-	TCNT1 = 34286;
-  c4:	8e ee       	ldi	r24, 0xEE	; 238
-  c6:	95 e8       	ldi	r25, 0x85	; 133
-  c8:	90 93 85 00 	sts	0x0085, r25	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
-  cc:	80 93 84 00 	sts	0x0084, r24	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
-  d0:	9f 91       	pop	r25
-  d2:	8f 91       	pop	r24
-  d4:	0f 90       	pop	r0
-  d6:	0f be       	out	0x3f, r0	; 63
-  d8:	0f 90       	pop	r0
-  da:	1f 90       	pop	r1
-  dc:	18 95       	reti
+ 110:	1f 92       	push	r1
+ 112:	0f 92       	push	r0
+ 114:	0f b6       	in	r0, 0x3f	; 63
+ 116:	0f 92       	push	r0
+ 118:	11 24       	eor	r1, r1
+ 11a:	8f 93       	push	r24
+ 11c:	9f 93       	push	r25
+ 11e:	ef 93       	push	r30
+ 120:	ff 93       	push	r31
+	TIFR1 = (1<<TOV1);				// Clear TOV1 flag
+ 122:	81 e0       	ldi	r24, 0x01	; 1
+ 124:	86 bb       	out	0x16, r24	; 22
+	PORTB ^= (1<<5);				// Toggle LED
+ 126:	95 b1       	in	r25, 0x05	; 5
+ 128:	80 e2       	ldi	r24, 0x20	; 32
+ 12a:	89 27       	eor	r24, r25
+ 12c:	85 b9       	out	0x05, r24	; 5
+	TCNT1 = 34286;					// Reset TCNT1
+ 12e:	8e ee       	ldi	r24, 0xEE	; 238
+ 130:	95 e8       	ldi	r25, 0x85	; 133
+ 132:	90 93 85 00 	sts	0x0085, r25	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 136:	80 93 84 00 	sts	0x0084, r24	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+	while(!(UCSR0A & (1<<UDRE0)));	// Wait for the transmitter to finish
+ 13a:	e0 ec       	ldi	r30, 0xC0	; 192
+ 13c:	f0 e0       	ldi	r31, 0x00	; 0
+ 13e:	80 81       	ld	r24, Z
+ 140:	85 ff       	sbrs	r24, 5
+ 142:	fd cf       	rjmp	.-6      	; 0x13e <__vector_13+0x2e>
+	UDR0 = ADCvalue;				// Transmit the the new value
+ 144:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 148:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+}
+ 14c:	ff 91       	pop	r31
+ 14e:	ef 91       	pop	r30
+ 150:	9f 91       	pop	r25
+ 152:	8f 91       	pop	r24
+ 154:	0f 90       	pop	r0
+ 156:	0f be       	out	0x3f, r0	; 63
+ 158:	0f 90       	pop	r0
+ 15a:	1f 90       	pop	r1
+ 15c:	18 95       	reti
 
-000000de <_exit>:
-  de:	f8 94       	cli
+0000015e <__vector_21>:
 
-000000e0 <__stop_program>:
-  e0:	ff cf       	rjmp	.-2      	; 0xe0 <__stop_program>
+// Interrupt subroutine for ADC value
+ISR(ADC_vect)
+{
+ 15e:	1f 92       	push	r1
+ 160:	0f 92       	push	r0
+ 162:	0f b6       	in	r0, 0x3f	; 63
+ 164:	0f 92       	push	r0
+ 166:	11 24       	eor	r1, r1
+ 168:	8f 93       	push	r24
+	ADCvalue = (ADCH<<1);		// Store the decimal value of the converted signal
+ 16a:	80 91 79 00 	lds	r24, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x7e0079>
+ 16e:	88 0f       	add	r24, r24
+ 170:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+}
+ 174:	8f 91       	pop	r24
+ 176:	0f 90       	pop	r0
+ 178:	0f be       	out	0x3f, r0	; 63
+ 17a:	0f 90       	pop	r0
+ 17c:	1f 90       	pop	r1
+ 17e:	18 95       	reti
+
+00000180 <_exit>:
+ 180:	f8 94       	cli
+
+00000182 <__stop_program>:
+ 182:	ff cf       	rjmp	.-2      	; 0x182 <__stop_program>
