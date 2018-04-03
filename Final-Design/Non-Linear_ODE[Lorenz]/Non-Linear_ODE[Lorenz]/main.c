@@ -26,7 +26,7 @@ int main(void)
 	uint16_t a = 0x4608;
 	uint16_t b = 0xC8D8;
 	uint16_t c = 0x0000;
-	c = float_add(a, b);
+	c = float_mult(a, b);
 	
 	PORTB = c;
 	PORTB = 0x00;
@@ -97,6 +97,8 @@ void i2c_stop(void)
 //--------------------------------------------------------------------------------------
 // Floating Point Functions
 //--------------------------------------------------------------------------------------
+
+// Adds/Subtracts two floating points
 uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 {
 	// 6-bit field
@@ -110,7 +112,6 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 	volatile uint16_t exp = 0x00;		// Result of the exponents
 	volatile uint16_t mant = 0x00;		// Result of the mantissas
 	volatile uint16_t final = 0x00;		// Result of the addition
-	
 	
 								// ******* Num 0 ********
 	exp0 = a >> 9;				// Extract exponent field
@@ -177,7 +178,7 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 			mant = mant0 + mant1;
 		}
 		
-		// Check if the value is negative, if so, absolute value the magnitude and set sign bit to 1
+		// Check if the value is negative, if so, obtain the positive magnitude and set sign bit to 1
 		if(mant > 0x7FFF)
 		{
 			// Two's complement
@@ -186,7 +187,14 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 			// Set sign as negative
 			final |= (0x8000);
 		}
+		
 		// Normalize the mantissa
+		while(mant < 0x0200)
+		{
+			mant = mant << 1;
+			exp -= 0x0001;
+		}
+		/*
 		if(mant < 0x0002)
 		{
 			mant = mant << 9;
@@ -232,6 +240,7 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 			mant = mant << 1;
 			exp -= 0x0001;
 		}
+		*/
 	}
 	// Check for overflow
 	if(exp > 0x003F)
@@ -253,7 +262,175 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 	return final;
 }
 
-uint16_t float_mult(uint16_t a, uint16_t b)
+// Multiplies two floating points
+uint16_t float_mult(volatile uint16_t a, volatile uint16_t b)
 {
-	return 0;
+	// 6-bit field
+	volatile uint8_t exp0 = 0x00;		// Exponent field of a
+	volatile uint8_t exp1 = 0x00;		// Exponent field of b
+	
+	// 9-bit field
+	volatile uint16_t mant0 = 0x0000;		// Mantissa field of a
+	volatile uint16_t mant1 = 0x0000;		// Mantissa field of b
+	volatile uint16_t i = 0x0000;			// Loop iterations
+	volatile uint16_t exp = 0x0000;			// Result of the exponents
+	volatile uint16_t final = 0x0000;		// Result of the addition
+	
+	volatile uint8_t UA;				// Bits 16-19 of A;
+	volatile uint8_t US;				// Bits 16-19 of S;
+	volatile uint8_t UP;				// Bits 16-19 of P;
+	
+	volatile uint16_t A;				// Multiplicand
+	volatile uint16_t S;				// Multiplier
+	volatile uint16_t P;				// Product
+	
+								// ******* Num 0 ********
+	exp0 = a >> 9;				// Extract exponent field
+	exp0 = 0x3F & exp0;			// Mask out bit 6 and 7
+	mant0 = 0x01FF & a;			// Extract mantissa
+	mant0 |= 0x0200;			// Append the implicit 1
+	
+								// ******* Num 1 ********
+	exp1 = b >> 9;				// Extract exponent field
+	exp1 = 0x003F & exp1;		// Mask out bit 6 and 7
+	mant1 = 0x01FF & b;			// Extract mantissa
+	mant1 |= 0x0200;			// Append the implicit 1
+	
+	// Compute the initial exponent
+	exp = exp0 + exp1;
+	
+	// Compute the sign
+	final |= (a & 0x8000) ^ (b & 0x8000);
+	
+	// Multiply the mantissas using Booth's algorithm
+	// m = mant0		x = 11 bits
+	// r = mant1		y = 11 bits
+	// A = S = P = x + y + 1 = 23 [UReg + Reg = 24; Ignore bit 23]
+	
+	// Fill register A with m
+	UA = mant0 >> 4;
+	A = mant0 << 12;
+	
+	// Two's complement of m
+	mant0 = ~mant0;
+	mant0 += 0x0001;
+	mant0 &= 0x07FF;
+	
+	// Fill register S with -m
+	US = mant0 >> 4;
+	S = mant0 << 12;
+	
+	// Fill register P
+	P = mant1 << 1;
+	for(i = 0x0000; i < 11; i++)
+	{
+		if((P & 0x0003) == 0x0001)
+		{
+			P += A;
+			if(P < A)
+				UP += UA + 1;
+			else
+				UP += UA;
+			UP &= 0x7F;
+		}
+		else if((P & 0x0003) == 0x0002)
+		{
+			P += S;
+			if(P < S)
+				UP = UP + US + 1;
+			else
+				UP += US;
+		}
+		
+		// Adjust for arithmetic shift
+		if((UP & 0x40) == 0x40)
+			UP |= 0x80;
+		else
+			UP &= 0x7F;
+		
+		// Shift register P down to the right by 1
+		if((UP & 0x01) == 0x01)
+		{
+			UP = UP >> 1;
+			P = P >> 1;
+			P |= 0x8000;
+		}
+		else
+		{
+			UP = UP >> 1;
+			P = P >> 1;
+		}
+	}
+	
+	// Final shift [rid the implicit 1 of P]
+	// Note that final answer must be positive, hence, no arithmetic shift
+	if((UP & 0x01) == 0x01)
+	{
+		UP = UP >> 1;
+		P = P >> 1;
+		P |= 0x8000;
+	}
+	else
+	{
+		UP = UP >> 1;
+		P = P >> 1;
+	}
+	
+	// Normalize the result
+	if(UP > 0x04)				// [Mantissa too large]
+	{
+		while(UP > 0x04)
+		{
+			if((UP & 0x01) == 0x01)
+			{
+				UP = UP >> 1;
+				P = P >> 1;
+				P |= 0x8000;
+			}
+			else
+			{
+				UP = UP >> 1;
+				P = P >> 1;
+			}
+			exp += 0x0001;		// Update exponent
+		}
+	}
+	else if(UP < 0x04)			// [Mantissa too small]
+	{
+		while(UP < 0x04)
+		{
+			if((P & 0x8000) == 0x8000)
+			{
+				P = P << 1;
+				UP = UP << 1;
+				UP |= 0x01;
+			}
+			else
+			{
+				P = P << 1;
+				UP = UP << 1;
+			}
+			exp -= 0x0001;
+		}
+	}
+	
+	// Check for overflow
+	if(exp > 0x003F)
+	{
+		// Max out the range
+		final |= 0x3FFF;
+	}
+	// Check for underflow
+	else if(exp < 0x001F)
+	{
+		// Set to 0
+		final = 0x0000;
+	}
+	else
+	{
+		final |= exp << 9;
+		final |= UP << 6;
+		final |= P >> 9;
+	}
+	return final;
 }

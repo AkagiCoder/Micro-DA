@@ -3,29 +3,29 @@ Non-Linear_ODE[Lorenz].elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000490  2**0
+  0 .data         00000000  00800100  00800100  00000464  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000043c  00000000  00000000  00000054  2**1
+  1 .text         00000410  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000490  2**0
+  2 .comment      00000030  00000000  00000000  00000464  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000004c0  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000494  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000058  00000000  00000000  000004fc  2**0
+  4 .debug_aranges 00000058  00000000  00000000  000004d0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000008c0  00000000  00000000  00000554  2**0
+  5 .debug_info   00000979  00000000  00000000  00000528  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000775  00000000  00000000  00000e14  2**0
+  6 .debug_abbrev 00000796  00000000  00000000  00000ea1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000004d2  00000000  00000000  00001589  2**0
+  7 .debug_line   0000062c  00000000  00000000  00001637  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b0  00000000  00000000  00001a5c  2**2
+  8 .debug_frame  000000c0  00000000  00000000  00001c64  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000003dc  00000000  00000000  00001b0c  2**0
+  9 .debug_str    000003dc  00000000  00000000  00001d24  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000149  00000000  00000000  00001ee8  2**0
+ 10 .debug_loc    00000190  00000000  00000000  00002100  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000048  00000000  00000000  00002031  2**0
+ 11 .debug_ranges 00000048  00000000  00000000  00002290  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,19 +65,19 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 0d 02 	call	0x41a	; 0x41a <main>
-  78:	0c 94 1c 02 	jmp	0x438	; 0x438 <_exit>
+  74:	0e 94 f9 01 	call	0x3f2	; 0x3f2 <main>
+  78:	0c 94 06 02 	jmp	0x40c	; 0x40c <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <i2c_init>:
-	while((TWCR & (1 << TWINT)) == 0);					// Wait for TWI to complete
+	}
+	mant &= 0x01FF;				// Remove implicit 1
+	exp = exp << 9;				// Shift the exponent to correct position
+	final |= (exp | mant);		// Result
+	return final;
 }
-
-void i2c_stop(void)
-{
-	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Transmit STOP condition
   80:	10 92 b9 00 	sts	0x00B9, r1	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
   84:	88 e4       	ldi	r24, 0x48	; 72
   86:	80 93 b8 00 	sts	0x00B8, r24	; 0x8000b8 <__TEXT_REGION_LENGTH__+0x7e00b8>
@@ -85,27 +85,25 @@ void i2c_stop(void)
   8c:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
   90:	08 95       	ret
 
-00000092 <float_add>:
+00000092 <float_mult>:
 
-//--------------------------------------------------------------------------------------
-// Floating Point Functions
-//--------------------------------------------------------------------------------------
-uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
+// Multiplies two floating points
+uint16_t float_mult(volatile uint16_t a, volatile uint16_t b)
 {
   92:	cf 93       	push	r28
   94:	df 93       	push	r29
   96:	cd b7       	in	r28, 0x3d	; 61
   98:	de b7       	in	r29, 0x3e	; 62
-  9a:	61 97       	sbiw	r28, 0x11	; 17
+  9a:	69 97       	sbiw	r28, 0x19	; 25
   9c:	0f b6       	in	r0, 0x3f	; 63
   9e:	f8 94       	cli
   a0:	de bf       	out	0x3e, r29	; 62
   a2:	0f be       	out	0x3f, r0	; 63
   a4:	cd bf       	out	0x3d, r28	; 61
-  a6:	9f 87       	std	Y+15, r25	; 0x0f
-  a8:	8e 87       	std	Y+14, r24	; 0x0e
-  aa:	79 8b       	std	Y+17, r23	; 0x11
-  ac:	68 8b       	std	Y+16, r22	; 0x10
+  a6:	9f 8b       	std	Y+23, r25	; 0x17
+  a8:	8e 8b       	std	Y+22, r24	; 0x16
+  aa:	79 8f       	std	Y+25, r23	; 0x19
+  ac:	68 8f       	std	Y+24, r22	; 0x18
 	// 6-bit field
 	volatile uint8_t exp0 = 0x00;		// Exponent field of a
   ae:	19 82       	std	Y+1, r1	; 0x01
@@ -113,628 +111,631 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
   b0:	1a 82       	std	Y+2, r1	; 0x02
 	
 	// 9-bit field
-	volatile uint16_t mant0 = 0x00;		// Mantissa field of a
+	volatile uint16_t mant0 = 0x0000;		// Mantissa field of a
   b2:	1c 82       	std	Y+4, r1	; 0x04
   b4:	1b 82       	std	Y+3, r1	; 0x03
-	volatile uint16_t mant1 = 0x00;		// Mantissa field of b
+	volatile uint16_t mant1 = 0x0000;		// Mantissa field of b
   b6:	1e 82       	std	Y+6, r1	; 0x06
   b8:	1d 82       	std	Y+5, r1	; 0x05
-	volatile uint8_t shift = 0x00;		// Required shift to normalize
-  ba:	1f 82       	std	Y+7, r1	; 0x07
-	volatile uint16_t exp = 0x00;		// Result of the exponents
-  bc:	19 86       	std	Y+9, r1	; 0x09
-  be:	18 86       	std	Y+8, r1	; 0x08
-	volatile uint16_t mant = 0x00;		// Result of the mantissas
-  c0:	1b 86       	std	Y+11, r1	; 0x0b
-  c2:	1a 86       	std	Y+10, r1	; 0x0a
-	volatile uint16_t final = 0x00;		// Result of the addition
-  c4:	1d 86       	std	Y+13, r1	; 0x0d
-  c6:	1c 86       	std	Y+12, r1	; 0x0c
-	
+	volatile uint16_t i = 0x0000;			// Loop iterations
+  ba:	18 86       	std	Y+8, r1	; 0x08
+  bc:	1f 82       	std	Y+7, r1	; 0x07
+	volatile uint16_t exp = 0x0000;			// Result of the exponents
+  be:	1a 86       	std	Y+10, r1	; 0x0a
+  c0:	19 86       	std	Y+9, r1	; 0x09
+	volatile uint16_t final = 0x0000;		// Result of the addition
+  c2:	1c 86       	std	Y+12, r1	; 0x0c
+  c4:	1b 86       	std	Y+11, r1	; 0x0b
+	volatile uint16_t A;				// Multiplicand
+	volatile uint16_t S;				// Multiplier
+	volatile uint16_t P;				// Product
 	
 								// ******* Num 0 ********
 	exp0 = a >> 9;				// Extract exponent field
-  c8:	8e 85       	ldd	r24, Y+14	; 0x0e
-  ca:	9f 85       	ldd	r25, Y+15	; 0x0f
-  cc:	89 2f       	mov	r24, r25
-  ce:	86 95       	lsr	r24
-  d0:	89 83       	std	Y+1, r24	; 0x01
+  c6:	8e 89       	ldd	r24, Y+22	; 0x16
+  c8:	9f 89       	ldd	r25, Y+23	; 0x17
+  ca:	89 2f       	mov	r24, r25
+  cc:	86 95       	lsr	r24
+  ce:	89 83       	std	Y+1, r24	; 0x01
 	exp0 = 0x3F & exp0;			// Mask out bit 6 and 7
-  d2:	89 81       	ldd	r24, Y+1	; 0x01
-  d4:	8f 73       	andi	r24, 0x3F	; 63
-  d6:	89 83       	std	Y+1, r24	; 0x01
+  d0:	89 81       	ldd	r24, Y+1	; 0x01
+  d2:	8f 73       	andi	r24, 0x3F	; 63
+  d4:	89 83       	std	Y+1, r24	; 0x01
 	mant0 = 0x01FF & a;			// Extract mantissa
-  d8:	8e 85       	ldd	r24, Y+14	; 0x0e
-  da:	9f 85       	ldd	r25, Y+15	; 0x0f
-  dc:	91 70       	andi	r25, 0x01	; 1
-  de:	9c 83       	std	Y+4, r25	; 0x04
-  e0:	8b 83       	std	Y+3, r24	; 0x03
+  d6:	8e 89       	ldd	r24, Y+22	; 0x16
+  d8:	9f 89       	ldd	r25, Y+23	; 0x17
+  da:	91 70       	andi	r25, 0x01	; 1
+  dc:	9c 83       	std	Y+4, r25	; 0x04
+  de:	8b 83       	std	Y+3, r24	; 0x03
 	mant0 |= 0x0200;			// Append the implicit 1
-  e2:	8b 81       	ldd	r24, Y+3	; 0x03
-  e4:	9c 81       	ldd	r25, Y+4	; 0x04
-  e6:	92 60       	ori	r25, 0x02	; 2
-  e8:	9c 83       	std	Y+4, r25	; 0x04
-  ea:	8b 83       	std	Y+3, r24	; 0x03
+  e0:	8b 81       	ldd	r24, Y+3	; 0x03
+  e2:	9c 81       	ldd	r25, Y+4	; 0x04
+  e4:	92 60       	ori	r25, 0x02	; 2
+  e6:	9c 83       	std	Y+4, r25	; 0x04
+  e8:	8b 83       	std	Y+3, r24	; 0x03
 	
 								// ******* Num 1 ********
 	exp1 = b >> 9;				// Extract exponent field
-  ec:	88 89       	ldd	r24, Y+16	; 0x10
-  ee:	99 89       	ldd	r25, Y+17	; 0x11
-  f0:	89 2f       	mov	r24, r25
-  f2:	86 95       	lsr	r24
-  f4:	8a 83       	std	Y+2, r24	; 0x02
+  ea:	88 8d       	ldd	r24, Y+24	; 0x18
+  ec:	99 8d       	ldd	r25, Y+25	; 0x19
+  ee:	89 2f       	mov	r24, r25
+  f0:	86 95       	lsr	r24
+  f2:	8a 83       	std	Y+2, r24	; 0x02
 	exp1 = 0x003F & exp1;		// Mask out bit 6 and 7
-  f6:	8a 81       	ldd	r24, Y+2	; 0x02
-  f8:	8f 73       	andi	r24, 0x3F	; 63
-  fa:	8a 83       	std	Y+2, r24	; 0x02
+  f4:	8a 81       	ldd	r24, Y+2	; 0x02
+  f6:	8f 73       	andi	r24, 0x3F	; 63
+  f8:	8a 83       	std	Y+2, r24	; 0x02
 	mant1 = 0x01FF & b;			// Extract mantissa
-  fc:	88 89       	ldd	r24, Y+16	; 0x10
-  fe:	99 89       	ldd	r25, Y+17	; 0x11
- 100:	91 70       	andi	r25, 0x01	; 1
- 102:	9e 83       	std	Y+6, r25	; 0x06
- 104:	8d 83       	std	Y+5, r24	; 0x05
+  fa:	88 8d       	ldd	r24, Y+24	; 0x18
+  fc:	99 8d       	ldd	r25, Y+25	; 0x19
+  fe:	91 70       	andi	r25, 0x01	; 1
+ 100:	9e 83       	std	Y+6, r25	; 0x06
+ 102:	8d 83       	std	Y+5, r24	; 0x05
 	mant1 |= 0x0200;			// Append the implicit 1
- 106:	8d 81       	ldd	r24, Y+5	; 0x05
- 108:	9e 81       	ldd	r25, Y+6	; 0x06
- 10a:	92 60       	ori	r25, 0x02	; 2
- 10c:	9e 83       	std	Y+6, r25	; 0x06
- 10e:	8d 83       	std	Y+5, r24	; 0x05
+ 104:	8d 81       	ldd	r24, Y+5	; 0x05
+ 106:	9e 81       	ldd	r25, Y+6	; 0x06
+ 108:	92 60       	ori	r25, 0x02	; 2
+ 10a:	9e 83       	std	Y+6, r25	; 0x06
+ 10c:	8d 83       	std	Y+5, r24	; 0x05
 	
-	// Adjust and compute the exponent
-	if(exp0 > exp1)
- 110:	99 81       	ldd	r25, Y+1	; 0x01
- 112:	8a 81       	ldd	r24, Y+2	; 0x02
- 114:	89 17       	cp	r24, r25
- 116:	98 f4       	brcc	.+38     	; 0x13e <float_add+0xac>
-	{
-		shift = exp0 - exp1;
- 118:	89 81       	ldd	r24, Y+1	; 0x01
- 11a:	9a 81       	ldd	r25, Y+2	; 0x02
- 11c:	89 1b       	sub	r24, r25
- 11e:	8f 83       	std	Y+7, r24	; 0x07
-		exp = exp0;
- 120:	89 81       	ldd	r24, Y+1	; 0x01
- 122:	90 e0       	ldi	r25, 0x00	; 0
- 124:	99 87       	std	Y+9, r25	; 0x09
- 126:	88 87       	std	Y+8, r24	; 0x08
-		mant1 = mant1 >> shift;
- 128:	8d 81       	ldd	r24, Y+5	; 0x05
- 12a:	9e 81       	ldd	r25, Y+6	; 0x06
- 12c:	2f 81       	ldd	r18, Y+7	; 0x07
- 12e:	02 c0       	rjmp	.+4      	; 0x134 <float_add+0xa2>
- 130:	96 95       	lsr	r25
- 132:	87 95       	ror	r24
- 134:	2a 95       	dec	r18
- 136:	e2 f7       	brpl	.-8      	; 0x130 <float_add+0x9e>
- 138:	9e 83       	std	Y+6, r25	; 0x06
- 13a:	8d 83       	std	Y+5, r24	; 0x05
- 13c:	1b c0       	rjmp	.+54     	; 0x174 <float_add+0xe2>
-	}
-	else if(exp1 > exp0)
- 13e:	9a 81       	ldd	r25, Y+2	; 0x02
- 140:	89 81       	ldd	r24, Y+1	; 0x01
- 142:	89 17       	cp	r24, r25
- 144:	98 f4       	brcc	.+38     	; 0x16c <float_add+0xda>
-	{
-		shift = exp1 - exp0;
- 146:	8a 81       	ldd	r24, Y+2	; 0x02
- 148:	99 81       	ldd	r25, Y+1	; 0x01
- 14a:	89 1b       	sub	r24, r25
- 14c:	8f 83       	std	Y+7, r24	; 0x07
-		exp = exp1;
- 14e:	8a 81       	ldd	r24, Y+2	; 0x02
- 150:	90 e0       	ldi	r25, 0x00	; 0
- 152:	99 87       	std	Y+9, r25	; 0x09
- 154:	88 87       	std	Y+8, r24	; 0x08
-		mant0 = mant0 >> shift;
- 156:	8b 81       	ldd	r24, Y+3	; 0x03
- 158:	9c 81       	ldd	r25, Y+4	; 0x04
- 15a:	2f 81       	ldd	r18, Y+7	; 0x07
- 15c:	02 c0       	rjmp	.+4      	; 0x162 <float_add+0xd0>
- 15e:	96 95       	lsr	r25
- 160:	87 95       	ror	r24
- 162:	2a 95       	dec	r18
- 164:	e2 f7       	brpl	.-8      	; 0x15e <float_add+0xcc>
- 166:	9c 83       	std	Y+4, r25	; 0x04
- 168:	8b 83       	std	Y+3, r24	; 0x03
- 16a:	04 c0       	rjmp	.+8      	; 0x174 <float_add+0xe2>
-	}
-	else
-	{
-		exp = exp0;
- 16c:	89 81       	ldd	r24, Y+1	; 0x01
- 16e:	90 e0       	ldi	r25, 0x00	; 0
- 170:	99 87       	std	Y+9, r25	; 0x09
- 172:	88 87       	std	Y+8, r24	; 0x08
-	}
+	// Compute the initial exponent
+	exp = exp0 + exp1;
+ 10e:	29 81       	ldd	r18, Y+1	; 0x01
+ 110:	8a 81       	ldd	r24, Y+2	; 0x02
+ 112:	90 e0       	ldi	r25, 0x00	; 0
+ 114:	82 0f       	add	r24, r18
+ 116:	91 1d       	adc	r25, r1
+ 118:	9a 87       	std	Y+10, r25	; 0x0a
+ 11a:	89 87       	std	Y+9, r24	; 0x09
 	
-	// Same signs [a + b] or [-a + -b]
-	if((a & 0x8000) == (b & 0x8000))
- 174:	2e 85       	ldd	r18, Y+14	; 0x0e
- 176:	3f 85       	ldd	r19, Y+15	; 0x0f
- 178:	88 89       	ldd	r24, Y+16	; 0x10
- 17a:	99 89       	ldd	r25, Y+17	; 0x11
- 17c:	82 27       	eor	r24, r18
- 17e:	93 27       	eor	r25, r19
- 180:	99 23       	and	r25, r25
- 182:	24 f1       	brlt	.+72     	; 0x1cc <float_add+0x13a>
-	{
-		final |= (a & 0x8000);		// Set the sign
- 184:	8e 85       	ldd	r24, Y+14	; 0x0e
- 186:	9f 85       	ldd	r25, Y+15	; 0x0f
- 188:	2c 85       	ldd	r18, Y+12	; 0x0c
- 18a:	3d 85       	ldd	r19, Y+13	; 0x0d
- 18c:	88 27       	eor	r24, r24
- 18e:	90 78       	andi	r25, 0x80	; 128
- 190:	82 2b       	or	r24, r18
- 192:	93 2b       	or	r25, r19
- 194:	9d 87       	std	Y+13, r25	; 0x0d
- 196:	8c 87       	std	Y+12, r24	; 0x0c
-		mant = mant0 + mant1;		// Add the two mantissas
- 198:	2b 81       	ldd	r18, Y+3	; 0x03
- 19a:	3c 81       	ldd	r19, Y+4	; 0x04
+	// Compute the sign
+	final |= (a & 0x8000) ^ (b & 0x8000);
+ 11c:	8e 89       	ldd	r24, Y+22	; 0x16
+ 11e:	9f 89       	ldd	r25, Y+23	; 0x17
+ 120:	28 8d       	ldd	r18, Y+24	; 0x18
+ 122:	39 8d       	ldd	r19, Y+25	; 0x19
+ 124:	4b 85       	ldd	r20, Y+11	; 0x0b
+ 126:	5c 85       	ldd	r21, Y+12	; 0x0c
+ 128:	82 27       	eor	r24, r18
+ 12a:	93 27       	eor	r25, r19
+ 12c:	88 27       	eor	r24, r24
+ 12e:	90 78       	andi	r25, 0x80	; 128
+ 130:	84 2b       	or	r24, r20
+ 132:	95 2b       	or	r25, r21
+ 134:	9c 87       	std	Y+12, r25	; 0x0c
+ 136:	8b 87       	std	Y+11, r24	; 0x0b
+	// m = mant0		x = 11 bits
+	// r = mant1		y = 11 bits
+	// A = S = P = x + y + 1 = 23 [UReg + Reg = 24; Ignore bit 23]
+	
+	// Fill register A with m
+	UA = mant0 >> 4;
+ 138:	8b 81       	ldd	r24, Y+3	; 0x03
+ 13a:	9c 81       	ldd	r25, Y+4	; 0x04
+ 13c:	92 95       	swap	r25
+ 13e:	82 95       	swap	r24
+ 140:	8f 70       	andi	r24, 0x0F	; 15
+ 142:	89 27       	eor	r24, r25
+ 144:	9f 70       	andi	r25, 0x0F	; 15
+ 146:	89 27       	eor	r24, r25
+ 148:	8d 87       	std	Y+13, r24	; 0x0d
+	A = mant0 << 12;
+ 14a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 14c:	9c 81       	ldd	r25, Y+4	; 0x04
+ 14e:	98 2f       	mov	r25, r24
+ 150:	88 27       	eor	r24, r24
+ 152:	92 95       	swap	r25
+ 154:	90 7f       	andi	r25, 0xF0	; 240
+ 156:	99 8b       	std	Y+17, r25	; 0x11
+ 158:	88 8b       	std	Y+16, r24	; 0x10
+	
+	// Two's complement of m
+	mant0 = ~mant0;
+ 15a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 15c:	9c 81       	ldd	r25, Y+4	; 0x04
+ 15e:	80 95       	com	r24
+ 160:	90 95       	com	r25
+ 162:	9c 83       	std	Y+4, r25	; 0x04
+ 164:	8b 83       	std	Y+3, r24	; 0x03
+	mant0 += 0x0001;
+ 166:	8b 81       	ldd	r24, Y+3	; 0x03
+ 168:	9c 81       	ldd	r25, Y+4	; 0x04
+ 16a:	01 96       	adiw	r24, 0x01	; 1
+ 16c:	9c 83       	std	Y+4, r25	; 0x04
+ 16e:	8b 83       	std	Y+3, r24	; 0x03
+	mant0 &= 0x07FF;
+ 170:	8b 81       	ldd	r24, Y+3	; 0x03
+ 172:	9c 81       	ldd	r25, Y+4	; 0x04
+ 174:	97 70       	andi	r25, 0x07	; 7
+ 176:	9c 83       	std	Y+4, r25	; 0x04
+ 178:	8b 83       	std	Y+3, r24	; 0x03
+	
+	// Fill register S with -m
+	US = mant0 >> 4;
+ 17a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 17c:	9c 81       	ldd	r25, Y+4	; 0x04
+ 17e:	92 95       	swap	r25
+ 180:	82 95       	swap	r24
+ 182:	8f 70       	andi	r24, 0x0F	; 15
+ 184:	89 27       	eor	r24, r25
+ 186:	9f 70       	andi	r25, 0x0F	; 15
+ 188:	89 27       	eor	r24, r25
+ 18a:	8e 87       	std	Y+14, r24	; 0x0e
+	S = mant0 << 12;
+ 18c:	8b 81       	ldd	r24, Y+3	; 0x03
+ 18e:	9c 81       	ldd	r25, Y+4	; 0x04
+ 190:	98 2f       	mov	r25, r24
+ 192:	88 27       	eor	r24, r24
+ 194:	92 95       	swap	r25
+ 196:	90 7f       	andi	r25, 0xF0	; 240
+ 198:	9b 8b       	std	Y+19, r25	; 0x13
+ 19a:	8a 8b       	std	Y+18, r24	; 0x12
+	
+	// Fill register P
+	P = mant1 << 1;
  19c:	8d 81       	ldd	r24, Y+5	; 0x05
  19e:	9e 81       	ldd	r25, Y+6	; 0x06
- 1a0:	82 0f       	add	r24, r18
- 1a2:	93 1f       	adc	r25, r19
- 1a4:	9b 87       	std	Y+11, r25	; 0x0b
- 1a6:	8a 87       	std	Y+10, r24	; 0x0a
-		
-		// Normalize the mantissa
-		if(mant > 0x03FF)
- 1a8:	8a 85       	ldd	r24, Y+10	; 0x0a
- 1aa:	9b 85       	ldd	r25, Y+11	; 0x0b
- 1ac:	81 15       	cp	r24, r1
- 1ae:	94 40       	sbci	r25, 0x04	; 4
- 1b0:	08 f4       	brcc	.+2      	; 0x1b4 <float_add+0x122>
- 1b2:	fa c0       	rjmp	.+500    	; 0x3a8 <float_add+0x316>
-		{
-			mant = mant >> 1;		// Shift mantissa to adjust the floating point
- 1b4:	8a 85       	ldd	r24, Y+10	; 0x0a
- 1b6:	9b 85       	ldd	r25, Y+11	; 0x0b
- 1b8:	96 95       	lsr	r25
- 1ba:	87 95       	ror	r24
- 1bc:	9b 87       	std	Y+11, r25	; 0x0b
- 1be:	8a 87       	std	Y+10, r24	; 0x0a
-			exp += 0x0001;			// Increment the exponent by 1
- 1c0:	88 85       	ldd	r24, Y+8	; 0x08
- 1c2:	99 85       	ldd	r25, Y+9	; 0x09
- 1c4:	01 96       	adiw	r24, 0x01	; 1
- 1c6:	99 87       	std	Y+9, r25	; 0x09
- 1c8:	88 87       	std	Y+8, r24	; 0x08
- 1ca:	ee c0       	rjmp	.+476    	; 0x3a8 <float_add+0x316>
-	}
-	// Different signs
-	else
+ 1a0:	88 0f       	add	r24, r24
+ 1a2:	99 1f       	adc	r25, r25
+ 1a4:	9d 8b       	std	Y+21, r25	; 0x15
+ 1a6:	8c 8b       	std	Y+20, r24	; 0x14
+	for(i = 0x0000; i < 11; i++)
+ 1a8:	18 86       	std	Y+8, r1	; 0x08
+ 1aa:	1f 82       	std	Y+7, r1	; 0x07
+ 1ac:	8f 81       	ldd	r24, Y+7	; 0x07
+ 1ae:	98 85       	ldd	r25, Y+8	; 0x08
+ 1b0:	0b 97       	sbiw	r24, 0x0b	; 11
+ 1b2:	08 f0       	brcs	.+2      	; 0x1b6 <float_mult+0x124>
+ 1b4:	71 c0       	rjmp	.+226    	; 0x298 <float_mult+0x206>
 	{
-		// [a - b]
-		if((b & 0x8000) == 0x8000)
- 1cc:	88 89       	ldd	r24, Y+16	; 0x10
- 1ce:	99 89       	ldd	r25, Y+17	; 0x11
- 1d0:	99 23       	and	r25, r25
- 1d2:	a4 f4       	brge	.+40     	; 0x1fc <float_add+0x16a>
+		if((P & 0x0003) == 0x0001)
+ 1b6:	8c 89       	ldd	r24, Y+20	; 0x14
+ 1b8:	9d 89       	ldd	r25, Y+21	; 0x15
+ 1ba:	83 70       	andi	r24, 0x03	; 3
+ 1bc:	99 27       	eor	r25, r25
+ 1be:	01 97       	sbiw	r24, 0x01	; 1
+ 1c0:	e9 f4       	brne	.+58     	; 0x1fc <float_mult+0x16a>
 		{
-			// Two's complement
-			mant1 = ~mant1;
- 1d4:	8d 81       	ldd	r24, Y+5	; 0x05
- 1d6:	9e 81       	ldd	r25, Y+6	; 0x06
- 1d8:	80 95       	com	r24
- 1da:	90 95       	com	r25
- 1dc:	9e 83       	std	Y+6, r25	; 0x06
- 1de:	8d 83       	std	Y+5, r24	; 0x05
-			mant1 += 0x0001;
- 1e0:	8d 81       	ldd	r24, Y+5	; 0x05
- 1e2:	9e 81       	ldd	r25, Y+6	; 0x06
- 1e4:	01 96       	adiw	r24, 0x01	; 1
- 1e6:	9e 83       	std	Y+6, r25	; 0x06
- 1e8:	8d 83       	std	Y+5, r24	; 0x05
-			// Perform the subtraction
-			mant = mant0 + mant1;
- 1ea:	2b 81       	ldd	r18, Y+3	; 0x03
- 1ec:	3c 81       	ldd	r19, Y+4	; 0x04
- 1ee:	8d 81       	ldd	r24, Y+5	; 0x05
- 1f0:	9e 81       	ldd	r25, Y+6	; 0x06
- 1f2:	82 0f       	add	r24, r18
- 1f4:	93 1f       	adc	r25, r19
- 1f6:	9b 87       	std	Y+11, r25	; 0x0b
- 1f8:	8a 87       	std	Y+10, r24	; 0x0a
- 1fa:	13 c0       	rjmp	.+38     	; 0x222 <float_add+0x190>
+			P += A;
+ 1c2:	28 89       	ldd	r18, Y+16	; 0x10
+ 1c4:	39 89       	ldd	r19, Y+17	; 0x11
+ 1c6:	8c 89       	ldd	r24, Y+20	; 0x14
+ 1c8:	9d 89       	ldd	r25, Y+21	; 0x15
+ 1ca:	82 0f       	add	r24, r18
+ 1cc:	93 1f       	adc	r25, r19
+ 1ce:	9d 8b       	std	Y+21, r25	; 0x15
+ 1d0:	8c 8b       	std	Y+20, r24	; 0x14
+			if(P < A)
+ 1d2:	2c 89       	ldd	r18, Y+20	; 0x14
+ 1d4:	3d 89       	ldd	r19, Y+21	; 0x15
+ 1d6:	88 89       	ldd	r24, Y+16	; 0x10
+ 1d8:	99 89       	ldd	r25, Y+17	; 0x11
+ 1da:	28 17       	cp	r18, r24
+ 1dc:	39 07       	cpc	r19, r25
+ 1de:	30 f4       	brcc	.+12     	; 0x1ec <float_mult+0x15a>
+				UP += UA + 1;
+ 1e0:	9d 85       	ldd	r25, Y+13	; 0x0d
+ 1e2:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 1e4:	89 0f       	add	r24, r25
+ 1e6:	8f 5f       	subi	r24, 0xFF	; 255
+ 1e8:	8f 87       	std	Y+15, r24	; 0x0f
+ 1ea:	04 c0       	rjmp	.+8      	; 0x1f4 <float_mult+0x162>
+			else
+				UP += UA;
+ 1ec:	9d 85       	ldd	r25, Y+13	; 0x0d
+ 1ee:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 1f0:	89 0f       	add	r24, r25
+ 1f2:	8f 87       	std	Y+15, r24	; 0x0f
+			UP &= 0x7F;
+ 1f4:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 1f6:	8f 77       	andi	r24, 0x7F	; 127
+ 1f8:	8f 87       	std	Y+15, r24	; 0x0f
+ 1fa:	1f c0       	rjmp	.+62     	; 0x23a <float_mult+0x1a8>
 		}
-		// [b - a]
+		else if((P & 0x0003) == 0x0002)
+ 1fc:	8c 89       	ldd	r24, Y+20	; 0x14
+ 1fe:	9d 89       	ldd	r25, Y+21	; 0x15
+ 200:	83 70       	andi	r24, 0x03	; 3
+ 202:	99 27       	eor	r25, r25
+ 204:	02 97       	sbiw	r24, 0x02	; 2
+ 206:	c9 f4       	brne	.+50     	; 0x23a <float_mult+0x1a8>
+		{
+			P += S;
+ 208:	2a 89       	ldd	r18, Y+18	; 0x12
+ 20a:	3b 89       	ldd	r19, Y+19	; 0x13
+ 20c:	8c 89       	ldd	r24, Y+20	; 0x14
+ 20e:	9d 89       	ldd	r25, Y+21	; 0x15
+ 210:	82 0f       	add	r24, r18
+ 212:	93 1f       	adc	r25, r19
+ 214:	9d 8b       	std	Y+21, r25	; 0x15
+ 216:	8c 8b       	std	Y+20, r24	; 0x14
+			if(P < S)
+ 218:	2c 89       	ldd	r18, Y+20	; 0x14
+ 21a:	3d 89       	ldd	r19, Y+21	; 0x15
+ 21c:	8a 89       	ldd	r24, Y+18	; 0x12
+ 21e:	9b 89       	ldd	r25, Y+19	; 0x13
+ 220:	28 17       	cp	r18, r24
+ 222:	39 07       	cpc	r19, r25
+ 224:	30 f4       	brcc	.+12     	; 0x232 <float_mult+0x1a0>
+				UP = UP + US + 1;
+ 226:	9f 85       	ldd	r25, Y+15	; 0x0f
+ 228:	8e 85       	ldd	r24, Y+14	; 0x0e
+ 22a:	89 0f       	add	r24, r25
+ 22c:	8f 5f       	subi	r24, 0xFF	; 255
+ 22e:	8f 87       	std	Y+15, r24	; 0x0f
+ 230:	04 c0       	rjmp	.+8      	; 0x23a <float_mult+0x1a8>
+			else
+				UP += US;
+ 232:	9e 85       	ldd	r25, Y+14	; 0x0e
+ 234:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 236:	89 0f       	add	r24, r25
+ 238:	8f 87       	std	Y+15, r24	; 0x0f
+		}
+		
+		// Adjust for arithmetic shift
+		if((UP & 0x40) == 0x40)
+ 23a:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 23c:	86 ff       	sbrs	r24, 6
+ 23e:	04 c0       	rjmp	.+8      	; 0x248 <float_mult+0x1b6>
+			UP |= 0x80;
+ 240:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 242:	80 68       	ori	r24, 0x80	; 128
+ 244:	8f 87       	std	Y+15, r24	; 0x0f
+ 246:	03 c0       	rjmp	.+6      	; 0x24e <float_mult+0x1bc>
+		else
+			UP &= 0x7F;
+ 248:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 24a:	8f 77       	andi	r24, 0x7F	; 127
+ 24c:	8f 87       	std	Y+15, r24	; 0x0f
+		
+		// Shift register P down to the right by 1
+		if((UP & 0x01) == 0x01)
+ 24e:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 250:	80 ff       	sbrs	r24, 0
+ 252:	0f c0       	rjmp	.+30     	; 0x272 <float_mult+0x1e0>
+		{
+			UP = UP >> 1;
+ 254:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 256:	86 95       	lsr	r24
+ 258:	8f 87       	std	Y+15, r24	; 0x0f
+			P = P >> 1;
+ 25a:	8c 89       	ldd	r24, Y+20	; 0x14
+ 25c:	9d 89       	ldd	r25, Y+21	; 0x15
+ 25e:	96 95       	lsr	r25
+ 260:	87 95       	ror	r24
+ 262:	9d 8b       	std	Y+21, r25	; 0x15
+ 264:	8c 8b       	std	Y+20, r24	; 0x14
+			P |= 0x8000;
+ 266:	8c 89       	ldd	r24, Y+20	; 0x14
+ 268:	9d 89       	ldd	r25, Y+21	; 0x15
+ 26a:	90 68       	ori	r25, 0x80	; 128
+ 26c:	9d 8b       	std	Y+21, r25	; 0x15
+ 26e:	8c 8b       	std	Y+20, r24	; 0x14
+ 270:	09 c0       	rjmp	.+18     	; 0x284 <float_mult+0x1f2>
+		}
 		else
 		{
-			// Two's complement
-			mant0 = ~mant0;
- 1fc:	8b 81       	ldd	r24, Y+3	; 0x03
- 1fe:	9c 81       	ldd	r25, Y+4	; 0x04
- 200:	80 95       	com	r24
- 202:	90 95       	com	r25
- 204:	9c 83       	std	Y+4, r25	; 0x04
- 206:	8b 83       	std	Y+3, r24	; 0x03
-			mant0 += 0x0001;
- 208:	8b 81       	ldd	r24, Y+3	; 0x03
- 20a:	9c 81       	ldd	r25, Y+4	; 0x04
- 20c:	01 96       	adiw	r24, 0x01	; 1
- 20e:	9c 83       	std	Y+4, r25	; 0x04
- 210:	8b 83       	std	Y+3, r24	; 0x03
-			// Perform the subtraction
-			mant = mant0 + mant1;
- 212:	2b 81       	ldd	r18, Y+3	; 0x03
- 214:	3c 81       	ldd	r19, Y+4	; 0x04
- 216:	8d 81       	ldd	r24, Y+5	; 0x05
- 218:	9e 81       	ldd	r25, Y+6	; 0x06
- 21a:	82 0f       	add	r24, r18
- 21c:	93 1f       	adc	r25, r19
- 21e:	9b 87       	std	Y+11, r25	; 0x0b
- 220:	8a 87       	std	Y+10, r24	; 0x0a
-		}
-		
-		// Check if the value is negative, if so, absolute value the magnitude and set sign bit to 1
-		if(mant > 0x7FFF)
- 222:	8a 85       	ldd	r24, Y+10	; 0x0a
- 224:	9b 85       	ldd	r25, Y+11	; 0x0b
- 226:	99 23       	and	r25, r25
- 228:	84 f4       	brge	.+32     	; 0x24a <float_add+0x1b8>
-		{
-			// Two's complement
-			mant = ~mant;
- 22a:	8a 85       	ldd	r24, Y+10	; 0x0a
- 22c:	9b 85       	ldd	r25, Y+11	; 0x0b
- 22e:	80 95       	com	r24
- 230:	90 95       	com	r25
- 232:	9b 87       	std	Y+11, r25	; 0x0b
- 234:	8a 87       	std	Y+10, r24	; 0x0a
-			mant += 1;
- 236:	8a 85       	ldd	r24, Y+10	; 0x0a
- 238:	9b 85       	ldd	r25, Y+11	; 0x0b
- 23a:	01 96       	adiw	r24, 0x01	; 1
- 23c:	9b 87       	std	Y+11, r25	; 0x0b
- 23e:	8a 87       	std	Y+10, r24	; 0x0a
-			// Set sign as negative
-			final |= (0x8000);
- 240:	8c 85       	ldd	r24, Y+12	; 0x0c
- 242:	9d 85       	ldd	r25, Y+13	; 0x0d
- 244:	90 68       	ori	r25, 0x80	; 128
- 246:	9d 87       	std	Y+13, r25	; 0x0d
- 248:	8c 87       	std	Y+12, r24	; 0x0c
-		}
-		// Normalize the mantissa
-		if(mant < 0x0002)
- 24a:	8a 85       	ldd	r24, Y+10	; 0x0a
- 24c:	9b 85       	ldd	r25, Y+11	; 0x0b
- 24e:	02 97       	sbiw	r24, 0x02	; 2
- 250:	68 f4       	brcc	.+26     	; 0x26c <float_add+0x1da>
-		{
-			mant = mant << 9;
- 252:	8a 85       	ldd	r24, Y+10	; 0x0a
- 254:	9b 85       	ldd	r25, Y+11	; 0x0b
- 256:	98 2f       	mov	r25, r24
- 258:	88 27       	eor	r24, r24
- 25a:	99 0f       	add	r25, r25
- 25c:	9b 87       	std	Y+11, r25	; 0x0b
- 25e:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0009;
- 260:	88 85       	ldd	r24, Y+8	; 0x08
- 262:	99 85       	ldd	r25, Y+9	; 0x09
- 264:	09 97       	sbiw	r24, 0x09	; 9
- 266:	99 87       	std	Y+9, r25	; 0x09
- 268:	88 87       	std	Y+8, r24	; 0x08
- 26a:	9e c0       	rjmp	.+316    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x004)
- 26c:	8a 85       	ldd	r24, Y+10	; 0x0a
- 26e:	9b 85       	ldd	r25, Y+11	; 0x0b
- 270:	04 97       	sbiw	r24, 0x04	; 4
- 272:	60 f4       	brcc	.+24     	; 0x28c <float_add+0x1fa>
-		{
-			mant = mant << 8;
- 274:	8a 85       	ldd	r24, Y+10	; 0x0a
- 276:	9b 85       	ldd	r25, Y+11	; 0x0b
- 278:	98 2f       	mov	r25, r24
- 27a:	88 27       	eor	r24, r24
- 27c:	9b 87       	std	Y+11, r25	; 0x0b
- 27e:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0008;
- 280:	88 85       	ldd	r24, Y+8	; 0x08
- 282:	99 85       	ldd	r25, Y+9	; 0x09
- 284:	08 97       	sbiw	r24, 0x08	; 8
- 286:	99 87       	std	Y+9, r25	; 0x09
- 288:	88 87       	std	Y+8, r24	; 0x08
- 28a:	8e c0       	rjmp	.+284    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x008)
- 28c:	8a 85       	ldd	r24, Y+10	; 0x0a
- 28e:	9b 85       	ldd	r25, Y+11	; 0x0b
- 290:	08 97       	sbiw	r24, 0x08	; 8
- 292:	78 f4       	brcc	.+30     	; 0x2b2 <float_add+0x220>
-		{
-			mant = mant << 7;
- 294:	8a 85       	ldd	r24, Y+10	; 0x0a
- 296:	9b 85       	ldd	r25, Y+11	; 0x0b
- 298:	96 95       	lsr	r25
- 29a:	98 2f       	mov	r25, r24
- 29c:	88 27       	eor	r24, r24
- 29e:	97 95       	ror	r25
- 2a0:	87 95       	ror	r24
- 2a2:	9b 87       	std	Y+11, r25	; 0x0b
- 2a4:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0007;
- 2a6:	88 85       	ldd	r24, Y+8	; 0x08
- 2a8:	99 85       	ldd	r25, Y+9	; 0x09
- 2aa:	07 97       	sbiw	r24, 0x07	; 7
- 2ac:	99 87       	std	Y+9, r25	; 0x09
- 2ae:	88 87       	std	Y+8, r24	; 0x08
- 2b0:	7b c0       	rjmp	.+246    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0010)
- 2b2:	8a 85       	ldd	r24, Y+10	; 0x0a
- 2b4:	9b 85       	ldd	r25, Y+11	; 0x0b
- 2b6:	40 97       	sbiw	r24, 0x10	; 16
- 2b8:	98 f4       	brcc	.+38     	; 0x2e0 <float_add+0x24e>
-		{
-			mant = mant << 6;
- 2ba:	8a 85       	ldd	r24, Y+10	; 0x0a
- 2bc:	9b 85       	ldd	r25, Y+11	; 0x0b
- 2be:	00 24       	eor	r0, r0
- 2c0:	96 95       	lsr	r25
- 2c2:	87 95       	ror	r24
- 2c4:	07 94       	ror	r0
- 2c6:	96 95       	lsr	r25
- 2c8:	87 95       	ror	r24
- 2ca:	07 94       	ror	r0
- 2cc:	98 2f       	mov	r25, r24
- 2ce:	80 2d       	mov	r24, r0
- 2d0:	9b 87       	std	Y+11, r25	; 0x0b
- 2d2:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0006;
- 2d4:	88 85       	ldd	r24, Y+8	; 0x08
- 2d6:	99 85       	ldd	r25, Y+9	; 0x09
- 2d8:	06 97       	sbiw	r24, 0x06	; 6
- 2da:	99 87       	std	Y+9, r25	; 0x09
- 2dc:	88 87       	std	Y+8, r24	; 0x08
- 2de:	64 c0       	rjmp	.+200    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0020)
- 2e0:	8a 85       	ldd	r24, Y+10	; 0x0a
- 2e2:	9b 85       	ldd	r25, Y+11	; 0x0b
- 2e4:	80 97       	sbiw	r24, 0x20	; 32
- 2e6:	90 f4       	brcc	.+36     	; 0x30c <float_add+0x27a>
-		{
-			mant = mant << 5;
- 2e8:	8a 85       	ldd	r24, Y+10	; 0x0a
- 2ea:	9b 85       	ldd	r25, Y+11	; 0x0b
- 2ec:	88 0f       	add	r24, r24
- 2ee:	99 1f       	adc	r25, r25
- 2f0:	82 95       	swap	r24
- 2f2:	92 95       	swap	r25
- 2f4:	90 7f       	andi	r25, 0xF0	; 240
- 2f6:	98 27       	eor	r25, r24
- 2f8:	80 7f       	andi	r24, 0xF0	; 240
- 2fa:	98 27       	eor	r25, r24
- 2fc:	9b 87       	std	Y+11, r25	; 0x0b
- 2fe:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0005;
- 300:	88 85       	ldd	r24, Y+8	; 0x08
- 302:	99 85       	ldd	r25, Y+9	; 0x09
- 304:	05 97       	sbiw	r24, 0x05	; 5
- 306:	99 87       	std	Y+9, r25	; 0x09
- 308:	88 87       	std	Y+8, r24	; 0x08
- 30a:	4e c0       	rjmp	.+156    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0040)
- 30c:	8a 85       	ldd	r24, Y+10	; 0x0a
- 30e:	9b 85       	ldd	r25, Y+11	; 0x0b
- 310:	80 34       	cpi	r24, 0x40	; 64
- 312:	91 05       	cpc	r25, r1
- 314:	80 f4       	brcc	.+32     	; 0x336 <float_add+0x2a4>
-		{
-			mant = mant << 4;
- 316:	8a 85       	ldd	r24, Y+10	; 0x0a
- 318:	9b 85       	ldd	r25, Y+11	; 0x0b
- 31a:	82 95       	swap	r24
- 31c:	92 95       	swap	r25
- 31e:	90 7f       	andi	r25, 0xF0	; 240
- 320:	98 27       	eor	r25, r24
- 322:	80 7f       	andi	r24, 0xF0	; 240
- 324:	98 27       	eor	r25, r24
- 326:	9b 87       	std	Y+11, r25	; 0x0b
- 328:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0004;
- 32a:	88 85       	ldd	r24, Y+8	; 0x08
- 32c:	99 85       	ldd	r25, Y+9	; 0x09
- 32e:	04 97       	sbiw	r24, 0x04	; 4
- 330:	99 87       	std	Y+9, r25	; 0x09
- 332:	88 87       	std	Y+8, r24	; 0x08
- 334:	39 c0       	rjmp	.+114    	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0080)
- 336:	8a 85       	ldd	r24, Y+10	; 0x0a
- 338:	9b 85       	ldd	r25, Y+11	; 0x0b
- 33a:	80 38       	cpi	r24, 0x80	; 128
- 33c:	91 05       	cpc	r25, r1
- 33e:	80 f4       	brcc	.+32     	; 0x360 <float_add+0x2ce>
-		{
-			mant = mant << 3;
- 340:	8a 85       	ldd	r24, Y+10	; 0x0a
- 342:	9b 85       	ldd	r25, Y+11	; 0x0b
- 344:	88 0f       	add	r24, r24
- 346:	99 1f       	adc	r25, r25
- 348:	88 0f       	add	r24, r24
- 34a:	99 1f       	adc	r25, r25
- 34c:	88 0f       	add	r24, r24
- 34e:	99 1f       	adc	r25, r25
- 350:	9b 87       	std	Y+11, r25	; 0x0b
- 352:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0003;
- 354:	88 85       	ldd	r24, Y+8	; 0x08
- 356:	99 85       	ldd	r25, Y+9	; 0x09
- 358:	03 97       	sbiw	r24, 0x03	; 3
- 35a:	99 87       	std	Y+9, r25	; 0x09
- 35c:	88 87       	std	Y+8, r24	; 0x08
- 35e:	24 c0       	rjmp	.+72     	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0100)
- 360:	8a 85       	ldd	r24, Y+10	; 0x0a
- 362:	9b 85       	ldd	r25, Y+11	; 0x0b
- 364:	8f 3f       	cpi	r24, 0xFF	; 255
- 366:	91 05       	cpc	r25, r1
- 368:	09 f0       	breq	.+2      	; 0x36c <float_add+0x2da>
- 36a:	70 f4       	brcc	.+28     	; 0x388 <float_add+0x2f6>
-		{
-			mant = mant << 2;
- 36c:	8a 85       	ldd	r24, Y+10	; 0x0a
- 36e:	9b 85       	ldd	r25, Y+11	; 0x0b
- 370:	88 0f       	add	r24, r24
- 372:	99 1f       	adc	r25, r25
- 374:	88 0f       	add	r24, r24
- 376:	99 1f       	adc	r25, r25
- 378:	9b 87       	std	Y+11, r25	; 0x0b
- 37a:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0002;
- 37c:	88 85       	ldd	r24, Y+8	; 0x08
- 37e:	99 85       	ldd	r25, Y+9	; 0x09
- 380:	02 97       	sbiw	r24, 0x02	; 2
- 382:	99 87       	std	Y+9, r25	; 0x09
- 384:	88 87       	std	Y+8, r24	; 0x08
- 386:	10 c0       	rjmp	.+32     	; 0x3a8 <float_add+0x316>
-		}
-		else if(mant < 0x0200)
- 388:	8a 85       	ldd	r24, Y+10	; 0x0a
- 38a:	9b 85       	ldd	r25, Y+11	; 0x0b
- 38c:	81 15       	cp	r24, r1
- 38e:	92 40       	sbci	r25, 0x02	; 2
- 390:	58 f4       	brcc	.+22     	; 0x3a8 <float_add+0x316>
-		{
-			mant = mant << 1;
- 392:	8a 85       	ldd	r24, Y+10	; 0x0a
- 394:	9b 85       	ldd	r25, Y+11	; 0x0b
- 396:	88 0f       	add	r24, r24
- 398:	99 1f       	adc	r25, r25
- 39a:	9b 87       	std	Y+11, r25	; 0x0b
- 39c:	8a 87       	std	Y+10, r24	; 0x0a
-			exp -= 0x0001;
- 39e:	88 85       	ldd	r24, Y+8	; 0x08
- 3a0:	99 85       	ldd	r25, Y+9	; 0x09
- 3a2:	01 97       	sbiw	r24, 0x01	; 1
- 3a4:	99 87       	std	Y+9, r25	; 0x09
- 3a6:	88 87       	std	Y+8, r24	; 0x08
+			UP = UP >> 1;
+ 272:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 274:	86 95       	lsr	r24
+ 276:	8f 87       	std	Y+15, r24	; 0x0f
+			P = P >> 1;
+ 278:	8c 89       	ldd	r24, Y+20	; 0x14
+ 27a:	9d 89       	ldd	r25, Y+21	; 0x15
+ 27c:	96 95       	lsr	r25
+ 27e:	87 95       	ror	r24
+ 280:	9d 8b       	std	Y+21, r25	; 0x15
+ 282:	8c 8b       	std	Y+20, r24	; 0x14
+	US = mant0 >> 4;
+	S = mant0 << 12;
+	
+	// Fill register P
+	P = mant1 << 1;
+	for(i = 0x0000; i < 11; i++)
+ 284:	8f 81       	ldd	r24, Y+7	; 0x07
+ 286:	98 85       	ldd	r25, Y+8	; 0x08
+ 288:	01 96       	adiw	r24, 0x01	; 1
+ 28a:	98 87       	std	Y+8, r25	; 0x08
+ 28c:	8f 83       	std	Y+7, r24	; 0x07
+ 28e:	8f 81       	ldd	r24, Y+7	; 0x07
+ 290:	98 85       	ldd	r25, Y+8	; 0x08
+ 292:	0b 97       	sbiw	r24, 0x0b	; 11
+ 294:	08 f4       	brcc	.+2      	; 0x298 <float_mult+0x206>
+ 296:	8f cf       	rjmp	.-226    	; 0x1b6 <float_mult+0x124>
 		}
 	}
+	
+	// Final shift [rid the implicit 1 of P]
+	// Note that final answer must be positive, hence, no arithmetic shift
+	if((UP & 0x01) == 0x01)
+ 298:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 29a:	80 ff       	sbrs	r24, 0
+ 29c:	0f c0       	rjmp	.+30     	; 0x2bc <float_mult+0x22a>
+	{
+		UP = UP >> 1;
+ 29e:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2a0:	86 95       	lsr	r24
+ 2a2:	8f 87       	std	Y+15, r24	; 0x0f
+		P = P >> 1;
+ 2a4:	8c 89       	ldd	r24, Y+20	; 0x14
+ 2a6:	9d 89       	ldd	r25, Y+21	; 0x15
+ 2a8:	96 95       	lsr	r25
+ 2aa:	87 95       	ror	r24
+ 2ac:	9d 8b       	std	Y+21, r25	; 0x15
+ 2ae:	8c 8b       	std	Y+20, r24	; 0x14
+		P |= 0x8000;
+ 2b0:	8c 89       	ldd	r24, Y+20	; 0x14
+ 2b2:	9d 89       	ldd	r25, Y+21	; 0x15
+ 2b4:	90 68       	ori	r25, 0x80	; 128
+ 2b6:	9d 8b       	std	Y+21, r25	; 0x15
+ 2b8:	8c 8b       	std	Y+20, r24	; 0x14
+ 2ba:	09 c0       	rjmp	.+18     	; 0x2ce <float_mult+0x23c>
+	}
+	else
+	{
+		UP = UP >> 1;
+ 2bc:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2be:	86 95       	lsr	r24
+ 2c0:	8f 87       	std	Y+15, r24	; 0x0f
+		P = P >> 1;
+ 2c2:	8c 89       	ldd	r24, Y+20	; 0x14
+ 2c4:	9d 89       	ldd	r25, Y+21	; 0x15
+ 2c6:	96 95       	lsr	r25
+ 2c8:	87 95       	ror	r24
+ 2ca:	9d 8b       	std	Y+21, r25	; 0x15
+ 2cc:	8c 8b       	std	Y+20, r24	; 0x14
+	}
+	
+	// Normalize the result
+	if(UP > 0x04)				// [Mantissa too large]
+ 2ce:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2d0:	85 30       	cpi	r24, 0x05	; 5
+ 2d2:	40 f1       	brcs	.+80     	; 0x324 <float_mult+0x292>
+	{
+		while(UP > 0x04)
+ 2d4:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2d6:	85 30       	cpi	r24, 0x05	; 5
+ 2d8:	08 f4       	brcc	.+2      	; 0x2dc <float_mult+0x24a>
+ 2da:	4c c0       	rjmp	.+152    	; 0x374 <float_mult+0x2e2>
+		{
+			if((UP & 0x01) == 0x01)
+ 2dc:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2de:	80 ff       	sbrs	r24, 0
+ 2e0:	0f c0       	rjmp	.+30     	; 0x300 <float_mult+0x26e>
+			{
+				UP = UP >> 1;
+ 2e2:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 2e4:	86 95       	lsr	r24
+ 2e6:	8f 87       	std	Y+15, r24	; 0x0f
+				P = P >> 1;
+ 2e8:	8c 89       	ldd	r24, Y+20	; 0x14
+ 2ea:	9d 89       	ldd	r25, Y+21	; 0x15
+ 2ec:	96 95       	lsr	r25
+ 2ee:	87 95       	ror	r24
+ 2f0:	9d 8b       	std	Y+21, r25	; 0x15
+ 2f2:	8c 8b       	std	Y+20, r24	; 0x14
+				P |= 0x8000;
+ 2f4:	8c 89       	ldd	r24, Y+20	; 0x14
+ 2f6:	9d 89       	ldd	r25, Y+21	; 0x15
+ 2f8:	90 68       	ori	r25, 0x80	; 128
+ 2fa:	9d 8b       	std	Y+21, r25	; 0x15
+ 2fc:	8c 8b       	std	Y+20, r24	; 0x14
+ 2fe:	09 c0       	rjmp	.+18     	; 0x312 <float_mult+0x280>
+			}
+			else
+			{
+				UP = UP >> 1;
+ 300:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 302:	86 95       	lsr	r24
+ 304:	8f 87       	std	Y+15, r24	; 0x0f
+				P = P >> 1;
+ 306:	8c 89       	ldd	r24, Y+20	; 0x14
+ 308:	9d 89       	ldd	r25, Y+21	; 0x15
+ 30a:	96 95       	lsr	r25
+ 30c:	87 95       	ror	r24
+ 30e:	9d 8b       	std	Y+21, r25	; 0x15
+ 310:	8c 8b       	std	Y+20, r24	; 0x14
+			}
+			exp += 0x0001;		// Update exponent
+ 312:	89 85       	ldd	r24, Y+9	; 0x09
+ 314:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 316:	01 96       	adiw	r24, 0x01	; 1
+ 318:	9a 87       	std	Y+10, r25	; 0x0a
+ 31a:	89 87       	std	Y+9, r24	; 0x09
+	}
+	
+	// Normalize the result
+	if(UP > 0x04)				// [Mantissa too large]
+	{
+		while(UP > 0x04)
+ 31c:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 31e:	85 30       	cpi	r24, 0x05	; 5
+ 320:	e8 f6       	brcc	.-70     	; 0x2dc <float_mult+0x24a>
+ 322:	28 c0       	rjmp	.+80     	; 0x374 <float_mult+0x2e2>
+				P = P >> 1;
+			}
+			exp += 0x0001;		// Update exponent
+		}
+	}
+	else if(UP < 0x04)			// [Mantissa too small]
+ 324:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 326:	84 30       	cpi	r24, 0x04	; 4
+ 328:	28 f5       	brcc	.+74     	; 0x374 <float_mult+0x2e2>
+	{
+		while(UP < 0x04)
+ 32a:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 32c:	84 30       	cpi	r24, 0x04	; 4
+ 32e:	10 f5       	brcc	.+68     	; 0x374 <float_mult+0x2e2>
+		{
+			if((P & 0x8000) == 0x8000)
+ 330:	8c 89       	ldd	r24, Y+20	; 0x14
+ 332:	9d 89       	ldd	r25, Y+21	; 0x15
+ 334:	99 23       	and	r25, r25
+ 336:	6c f4       	brge	.+26     	; 0x352 <float_mult+0x2c0>
+			{
+				P = P << 1;
+ 338:	8c 89       	ldd	r24, Y+20	; 0x14
+ 33a:	9d 89       	ldd	r25, Y+21	; 0x15
+ 33c:	88 0f       	add	r24, r24
+ 33e:	99 1f       	adc	r25, r25
+ 340:	9d 8b       	std	Y+21, r25	; 0x15
+ 342:	8c 8b       	std	Y+20, r24	; 0x14
+				UP = UP << 1;
+ 344:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 346:	88 0f       	add	r24, r24
+ 348:	8f 87       	std	Y+15, r24	; 0x0f
+				UP |= 0x01;
+ 34a:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 34c:	81 60       	ori	r24, 0x01	; 1
+ 34e:	8f 87       	std	Y+15, r24	; 0x0f
+ 350:	09 c0       	rjmp	.+18     	; 0x364 <float_mult+0x2d2>
+			}
+			else
+			{
+				P = P << 1;
+ 352:	8c 89       	ldd	r24, Y+20	; 0x14
+ 354:	9d 89       	ldd	r25, Y+21	; 0x15
+ 356:	88 0f       	add	r24, r24
+ 358:	99 1f       	adc	r25, r25
+ 35a:	9d 8b       	std	Y+21, r25	; 0x15
+ 35c:	8c 8b       	std	Y+20, r24	; 0x14
+				UP = UP << 1;
+ 35e:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 360:	88 0f       	add	r24, r24
+ 362:	8f 87       	std	Y+15, r24	; 0x0f
+			}
+			exp -= 0x0001;
+ 364:	89 85       	ldd	r24, Y+9	; 0x09
+ 366:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 368:	01 97       	sbiw	r24, 0x01	; 1
+ 36a:	9a 87       	std	Y+10, r25	; 0x0a
+ 36c:	89 87       	std	Y+9, r24	; 0x09
+			exp += 0x0001;		// Update exponent
+		}
+	}
+	else if(UP < 0x04)			// [Mantissa too small]
+	{
+		while(UP < 0x04)
+ 36e:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 370:	84 30       	cpi	r24, 0x04	; 4
+ 372:	f0 f2       	brcs	.-68     	; 0x330 <float_mult+0x29e>
+			exp -= 0x0001;
+		}
+	}
+	
 	// Check for overflow
 	if(exp > 0x003F)
- 3a8:	88 85       	ldd	r24, Y+8	; 0x08
- 3aa:	99 85       	ldd	r25, Y+9	; 0x09
- 3ac:	80 34       	cpi	r24, 0x40	; 64
- 3ae:	91 05       	cpc	r25, r1
- 3b0:	48 f0       	brcs	.+18     	; 0x3c4 <float_add+0x332>
+ 374:	89 85       	ldd	r24, Y+9	; 0x09
+ 376:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 378:	80 34       	cpi	r24, 0x40	; 64
+ 37a:	91 05       	cpc	r25, r1
+ 37c:	38 f0       	brcs	.+14     	; 0x38c <float_mult+0x2fa>
 	{
 		// Max out the range
-		exp = 0x003F;
- 3b2:	8f e3       	ldi	r24, 0x3F	; 63
- 3b4:	90 e0       	ldi	r25, 0x00	; 0
- 3b6:	99 87       	std	Y+9, r25	; 0x09
- 3b8:	88 87       	std	Y+8, r24	; 0x08
-		mant = 0xFFFF;
- 3ba:	8f ef       	ldi	r24, 0xFF	; 255
- 3bc:	9f ef       	ldi	r25, 0xFF	; 255
- 3be:	9b 87       	std	Y+11, r25	; 0x0b
- 3c0:	8a 87       	std	Y+10, r24	; 0x0a
- 3c2:	08 c0       	rjmp	.+16     	; 0x3d4 <float_add+0x342>
+		final |= 0x3FFF;
+ 37e:	8b 85       	ldd	r24, Y+11	; 0x0b
+ 380:	9c 85       	ldd	r25, Y+12	; 0x0c
+ 382:	8f 6f       	ori	r24, 0xFF	; 255
+ 384:	9f 63       	ori	r25, 0x3F	; 63
+ 386:	9c 87       	std	Y+12, r25	; 0x0c
+ 388:	8b 87       	std	Y+11, r24	; 0x0b
+ 38a:	28 c0       	rjmp	.+80     	; 0x3dc <float_mult+0x34a>
 	}
 	// Check for underflow
 	else if(exp < 0x001F)
- 3c4:	88 85       	ldd	r24, Y+8	; 0x08
- 3c6:	99 85       	ldd	r25, Y+9	; 0x09
- 3c8:	4f 97       	sbiw	r24, 0x1f	; 31
- 3ca:	20 f4       	brcc	.+8      	; 0x3d4 <float_add+0x342>
+ 38c:	89 85       	ldd	r24, Y+9	; 0x09
+ 38e:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 390:	4f 97       	sbiw	r24, 0x1f	; 31
+ 392:	18 f4       	brcc	.+6      	; 0x39a <float_mult+0x308>
 	{
 		// Set to 0
-		exp = 0x0000;
- 3cc:	19 86       	std	Y+9, r1	; 0x09
- 3ce:	18 86       	std	Y+8, r1	; 0x08
-		mant = 0x0000;
- 3d0:	1b 86       	std	Y+11, r1	; 0x0b
- 3d2:	1a 86       	std	Y+10, r1	; 0x0a
+		final = 0x0000;
+ 394:	1c 86       	std	Y+12, r1	; 0x0c
+ 396:	1b 86       	std	Y+11, r1	; 0x0b
+ 398:	21 c0       	rjmp	.+66     	; 0x3dc <float_mult+0x34a>
 	}
-	mant &= 0x01FF;				// Remove implicit 1
- 3d4:	8a 85       	ldd	r24, Y+10	; 0x0a
- 3d6:	9b 85       	ldd	r25, Y+11	; 0x0b
- 3d8:	91 70       	andi	r25, 0x01	; 1
- 3da:	9b 87       	std	Y+11, r25	; 0x0b
- 3dc:	8a 87       	std	Y+10, r24	; 0x0a
-	exp = exp << 9;				// Shift the exponent to correct position
- 3de:	88 85       	ldd	r24, Y+8	; 0x08
- 3e0:	99 85       	ldd	r25, Y+9	; 0x09
- 3e2:	98 2f       	mov	r25, r24
- 3e4:	88 27       	eor	r24, r24
- 3e6:	99 0f       	add	r25, r25
- 3e8:	99 87       	std	Y+9, r25	; 0x09
- 3ea:	88 87       	std	Y+8, r24	; 0x08
-	final |= (exp | mant);		// Result
- 3ec:	48 85       	ldd	r20, Y+8	; 0x08
- 3ee:	59 85       	ldd	r21, Y+9	; 0x09
- 3f0:	8a 85       	ldd	r24, Y+10	; 0x0a
- 3f2:	9b 85       	ldd	r25, Y+11	; 0x0b
- 3f4:	2c 85       	ldd	r18, Y+12	; 0x0c
- 3f6:	3d 85       	ldd	r19, Y+13	; 0x0d
- 3f8:	84 2b       	or	r24, r20
- 3fa:	95 2b       	or	r25, r21
- 3fc:	82 2b       	or	r24, r18
- 3fe:	93 2b       	or	r25, r19
- 400:	9d 87       	std	Y+13, r25	; 0x0d
- 402:	8c 87       	std	Y+12, r24	; 0x0c
+	else
+	{
+		final |= exp << 9;
+ 39a:	89 85       	ldd	r24, Y+9	; 0x09
+ 39c:	9a 85       	ldd	r25, Y+10	; 0x0a
+ 39e:	2b 85       	ldd	r18, Y+11	; 0x0b
+ 3a0:	3c 85       	ldd	r19, Y+12	; 0x0c
+ 3a2:	98 2f       	mov	r25, r24
+ 3a4:	88 27       	eor	r24, r24
+ 3a6:	99 0f       	add	r25, r25
+ 3a8:	82 2b       	or	r24, r18
+ 3aa:	93 2b       	or	r25, r19
+ 3ac:	9c 87       	std	Y+12, r25	; 0x0c
+ 3ae:	8b 87       	std	Y+11, r24	; 0x0b
+		final |= UP << 6;
+ 3b0:	8f 85       	ldd	r24, Y+15	; 0x0f
+ 3b2:	2b 85       	ldd	r18, Y+11	; 0x0b
+ 3b4:	3c 85       	ldd	r19, Y+12	; 0x0c
+ 3b6:	40 e4       	ldi	r20, 0x40	; 64
+ 3b8:	84 9f       	mul	r24, r20
+ 3ba:	c0 01       	movw	r24, r0
+ 3bc:	11 24       	eor	r1, r1
+ 3be:	82 2b       	or	r24, r18
+ 3c0:	93 2b       	or	r25, r19
+ 3c2:	9c 87       	std	Y+12, r25	; 0x0c
+ 3c4:	8b 87       	std	Y+11, r24	; 0x0b
+		final |= P >> 9;
+ 3c6:	8c 89       	ldd	r24, Y+20	; 0x14
+ 3c8:	9d 89       	ldd	r25, Y+21	; 0x15
+ 3ca:	2b 85       	ldd	r18, Y+11	; 0x0b
+ 3cc:	3c 85       	ldd	r19, Y+12	; 0x0c
+ 3ce:	89 2f       	mov	r24, r25
+ 3d0:	99 27       	eor	r25, r25
+ 3d2:	86 95       	lsr	r24
+ 3d4:	82 2b       	or	r24, r18
+ 3d6:	93 2b       	or	r25, r19
+ 3d8:	9c 87       	std	Y+12, r25	; 0x0c
+ 3da:	8b 87       	std	Y+11, r24	; 0x0b
+	}
 	return final;
- 404:	8c 85       	ldd	r24, Y+12	; 0x0c
- 406:	9d 85       	ldd	r25, Y+13	; 0x0d
-}
- 408:	61 96       	adiw	r28, 0x11	; 17
- 40a:	0f b6       	in	r0, 0x3f	; 63
- 40c:	f8 94       	cli
- 40e:	de bf       	out	0x3e, r29	; 62
- 410:	0f be       	out	0x3f, r0	; 63
- 412:	cd bf       	out	0x3d, r28	; 61
- 414:	df 91       	pop	r29
- 416:	cf 91       	pop	r28
- 418:	08 95       	ret
+ 3dc:	8b 85       	ldd	r24, Y+11	; 0x0b
+ 3de:	9c 85       	ldd	r25, Y+12	; 0x0c
+ 3e0:	69 96       	adiw	r28, 0x19	; 25
+ 3e2:	0f b6       	in	r0, 0x3f	; 63
+ 3e4:	f8 94       	cli
+ 3e6:	de bf       	out	0x3e, r29	; 62
+ 3e8:	0f be       	out	0x3f, r0	; 63
+ 3ea:	cd bf       	out	0x3d, r28	; 61
+ 3ec:	df 91       	pop	r29
+ 3ee:	cf 91       	pop	r28
+ 3f0:	08 95       	ret
 
-0000041a <main>:
+000003f2 <main>:
 uint16_t float_add(volatile uint16_t a, volatile uint16_t b);
 uint16_t float_mult(volatile uint16_t a, volatile uint16_t b);
 
 int main(void)
 {
 	PORTC = (1 << 5) | (1 << 4);	// Pull-up the resistors on the SDA and SCL line
- 41a:	80 e3       	ldi	r24, 0x30	; 48
- 41c:	88 b9       	out	0x08, r24	; 8
+ 3f2:	80 e3       	ldi	r24, 0x30	; 48
+ 3f4:	88 b9       	out	0x08, r24	; 8
 	i2c_init();						// Initialize DAC module [Look at function for specific speed]
- 41e:	0e 94 40 00 	call	0x80	; 0x80 <i2c_init>
+ 3f6:	0e 94 40 00 	call	0x80	; 0x80 <i2c_init>
 	
 	uint16_t a = 0x4608;
 	uint16_t b = 0xC8D8;
 	uint16_t c = 0x0000;
-	c = float_add(a, b);
- 422:	68 ed       	ldi	r22, 0xD8	; 216
- 424:	78 ec       	ldi	r23, 0xC8	; 200
- 426:	88 e0       	ldi	r24, 0x08	; 8
- 428:	96 e4       	ldi	r25, 0x46	; 70
- 42a:	0e 94 49 00 	call	0x92	; 0x92 <float_add>
+	c = float_mult(a, b);
+ 3fa:	68 ed       	ldi	r22, 0xD8	; 216
+ 3fc:	78 ec       	ldi	r23, 0xC8	; 200
+ 3fe:	88 e0       	ldi	r24, 0x08	; 8
+ 400:	96 e4       	ldi	r25, 0x46	; 70
+ 402:	0e 94 49 00 	call	0x92	; 0x92 <float_mult>
 	
 	PORTB = c;
- 42e:	85 b9       	out	0x05, r24	; 5
+ 406:	85 b9       	out	0x05, r24	; 5
 	PORTB = 0x00;
- 430:	15 b8       	out	0x05, r1	; 5
-	
-    while (1) 
-	*/
-    {
-    }
-}
- 432:	80 e0       	ldi	r24, 0x00	; 0
- 434:	90 e0       	ldi	r25, 0x00	; 0
- 436:	08 95       	ret
+ 408:	15 b8       	out	0x05, r1	; 5
+ 40a:	ff cf       	rjmp	.-2      	; 0x40a <__LOCK_REGION_LENGTH__+0xa>
 
-00000438 <_exit>:
- 438:	f8 94       	cli
+0000040c <_exit>:
+ 40c:	f8 94       	cli
 
-0000043a <__stop_program>:
- 43a:	ff cf       	rjmp	.-2      	; 0x43a <__stop_program>
+0000040e <__stop_program>:
+ 40e:	ff cf       	rjmp	.-2      	; 0x40e <__stop_program>
