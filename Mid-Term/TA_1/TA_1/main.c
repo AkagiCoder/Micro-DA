@@ -11,21 +11,25 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 #define FOSC 16000000				// Clock speed
 #define BAUD 115200					// Desire baud rate
 #define MYUBRR FOSC/8/BAUD-1		// Formula to set the baud rate
 volatile uint8_t ADCvalue;			// Storage for the temperature in F
+volatile unsigned char TEMP[5];		// ASCII temp value
 
 // AT Commands
+volatile unsigned char CWMODE[] = "AT+CWMODE=3\r\n";
 volatile unsigned char WIFI[] = "AT+CWJAP=\"NETGEAR63\",\"freepiano573\"\r\n";
 volatile unsigned char AT[] = "AT\r\n";
-volatile unsigned char CIPMUX[] = "AT+CIPMUX=1\r\n";
-volatile unsigned char CIPSTART[] = "AT+CIPSTART=0,\"TCP\",\"api.thingspeak.com\",80\r\n";
-volatile unsigned char CIPSEND[] = "AT+CIPSEND=0,110\r\n";
-volatile unsigned char GET_DATA[] = "GET https://api.thingspeak.com/apps/thinghttp/send_request?api_key=VUH8L3BHKFOR587J\r\n";
-volatile unsigned char SEND_DATA[] = "GET https://api.thingspeak.com/update?api_key=VUH8L3BHKFOR587J=50\r\n";
-
+volatile unsigned char FIRM[] = "AT+GMR\r\n";
+volatile unsigned char CIPMUX[] = "AT+CIPMUX=0\r\n";
+volatile unsigned char CIPSTART[] = "AT+CIPSTART=\"TCP\",\"184.106.153.149\",80\r\n";
+volatile unsigned char SIZE[] = "AT+CIPSEND=45\r\n";
+volatile unsigned char SEND_DATA[] = "GET /update?key=54MRLC7ZQ32UD48T&field1=";
+volatile unsigned char CLOSE[] = "AT+CIPCLOSE\r\n";
+volatile unsigned char END[] = "\r\n\r\n";
 void send_AT(volatile unsigned char AT[]);
 
 int main(void)
@@ -52,49 +56,52 @@ int main(void)
 	UCSR0A |= (1<<U2X0);					// Double UART transmission speed
 	UCSR0B |= (1<<TXEN0);					// Enable transmitter
 	UCSR0C |= (1<<UCSZ01) | (1<<UCSZ00);	// Frame: 8-bit Data and 1 Stop bit
-	
-	// F = 8 MHz
-	TCNT1 = 49911;						// 65536-(16 MHz/1024)
-	TIMSK1 = (1<<TOIE1);				// Enable TIMER1 OVF interrupt	
-	TCCR1A = 0x00;
-	TCCR1B = (1<<CS12) | (1<<CS10);		// Start TIMER1 with prescalar 256
-	TCCR1C = 0x00;
-	
 	// ESP8266 settings
-	_delay_ms(500);
-	sei();								// Enable global interrupts
 	
-	_delay_ms(200);
+	_delay_ms(1000);
 	send_AT(AT);
 	
-	_delay_ms(2000);
+	_delay_ms(2000);					// Display firmware
+	send_AT(FIRM);
+	
+	_delay_ms(2000);					// Select WIFI mode
+	send_AT(CWMODE);
+	
+	_delay_ms(2000);					// Connect to local WIFI
 	send_AT(WIFI);
 	
-	_delay_ms(2000);
+	_delay_ms(10000);					// Enable connection
 	send_AT(CIPMUX);
 	
-	_delay_ms(2000);
-	send_AT(CIPSTART);
-	
+	sei();
     while (1) 
     {
+		_delay_ms(500);					// Start a connection as client
+		send_AT(CIPSTART);
+		
+		_delay_ms(250);					// Send size
+		send_AT(SIZE);
+		
+		_delay_ms(250);					// Send temperature
+		send_AT(SEND_DATA);
+		send_AT(TEMP);
+		send_AT(END);
     }
 	return 0;
-}
-
-// Interrupt subroutine for TIMER1 overflow (1 second)
-ISR(TIMER1_OVF_vect)
-{
-	TIFR1 = (1<<TOV1);				// Clear TOV1 flag
-	PORTB ^= (1<<5);				// Toggle LED
-	TCNT1 = 49911;					// Reset TCNT1
 }
 
 // Interrupt subroutine for ADC value
 ISR(ADC_vect)
 {
+	unsigned char i = 0x00;
+	char temperature[5];
 	ADCvalue = (ADCH<<1);		// Store the decimal value of the converted signal
-}								// Shift left by one to multiply by 2 and adjust the value
+	itoa(ADCvalue, temperature, 10);
+	for(i = 0x00; i < 5; i++)
+	{
+		TEMP[i] = temperature[i];
+	}
+}
 
 void send_AT(volatile unsigned char AT[])
 {
