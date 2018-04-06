@@ -730,20 +730,20 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
  4aa:	08 95       	ret
 
 000004ac <main>:
-
 uint32_t float_add(volatile uint32_t a, volatile uint32_t b);
+uint32_t float_mult(volatile uint32_t a, volatile uint32_t b);
 
 int main(void)
 {
-    float_add(num1, num0);
- 4ac:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <num0>
- 4b0:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <num0+0x1>
- 4b4:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <num0+0x2>
- 4b8:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <num0+0x3>
- 4bc:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <__data_start>
- 4c0:	70 91 01 01 	lds	r23, 0x0101	; 0x800101 <__data_start+0x1>
- 4c4:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_start+0x2>
- 4c8:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <__data_start+0x3>
+    float_add(num0, num1);
+ 4ac:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
+ 4b0:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
+ 4b4:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
+ 4b8:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
+ 4bc:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <num0>
+ 4c0:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <num0+0x1>
+ 4c4:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <num0+0x2>
+ 4c8:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <num0+0x3>
  4cc:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
  4d0:	ff cf       	rjmp	.-2      	; 0x4d0 <main+0x24>
 

@@ -2,14 +2,15 @@
 #include <stdint.h>
 
 volatile uint32_t num0 = 0x41820000;	// 16.25
-volatile uint32_t num1 = 0xC2360000;	// 45.5
+volatile uint32_t num1 = 0x42360000;	// 45.5
 volatile uint32_t num2 = 0x00000000;
 
 uint32_t float_add(volatile uint32_t a, volatile uint32_t b);
+uint32_t float_mult(volatile uint32_t a, volatile uint32_t b);
 
 int main(void)
 {
-    float_add(num1, num0);
+    float_add(num0, num1);
     while (1) 
     {
     }
@@ -125,4 +126,9 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
 	final |= mant;			// Insert mantissa into the final
 	
 	return final;
+}
+
+uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
+{
+	return 0;
 }
