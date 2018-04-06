@@ -21,14 +21,13 @@ volatile unsigned char TEMP[5];		// ASCII temp value
 
 // AT Commands
 volatile unsigned char CWMODE[] = "AT+CWMODE=3\r\n";
-volatile unsigned char WIFI[] = "AT+CWJAP=\"NETGEAR63\",\"freepiano573\"\r\n";
+volatile unsigned char WIFI[] = "AT+CWJAP=\"WIFI\",\"PASSWORD\"\r\n";
 volatile unsigned char AT[] = "AT\r\n";
 volatile unsigned char FIRM[] = "AT+GMR\r\n";
 volatile unsigned char CIPMUX[] = "AT+CIPMUX=0\r\n";
 volatile unsigned char CIPSTART[] = "AT+CIPSTART=\"TCP\",\"184.106.153.149\",80\r\n";
 volatile unsigned char SIZE[] = "AT+CIPSEND=45\r\n";
 volatile unsigned char SEND_DATA[] = "GET /update?key=54MRLC7ZQ32UD48T&field1=";
-volatile unsigned char CLOSE[] = "AT+CIPCLOSE\r\n";
 volatile unsigned char END[] = "\r\n\r\n";
 void send_AT(volatile unsigned char AT[]);
 
@@ -74,18 +73,21 @@ int main(void)
 	send_AT(CIPMUX);
 	
 	sei();
+	
+	// Send temperature to Thingspeak server every 30 seconds
     while (1) 
     {
-		_delay_ms(500);					// Start a connection as client
+		_delay_ms(500);					// Start a connection as client to Thingspeak
 		send_AT(CIPSTART);
 		
-		_delay_ms(250);					// Send size
+		_delay_ms(500);					// Specify the size of the data
 		send_AT(SIZE);
 		
-		_delay_ms(250);					// Send temperature
+		_delay_ms(1000);				// Send temperature
 		send_AT(SEND_DATA);
 		send_AT(TEMP);
 		send_AT(END);
+		_delay_ms(28000);
     }
 	return 0;
 }
