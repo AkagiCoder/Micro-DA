@@ -121,7 +121,7 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 	
 								// ******* Num 1 ********
 	exp1 = b >> 9;				// Extract exponent field
-	exp1 = 0x003F & exp1;		// Mask out bit 6 and 7
+	exp1 = 0x3F & exp1;		// Mask out bit 6 and 7
 	mant1 = 0x01FF & b;			// Extract mantissa
 	mant1 |= 0x0200;			// Append the implicit 1
 	
@@ -194,53 +194,7 @@ uint16_t float_add(volatile uint16_t a, volatile uint16_t b)
 			mant = mant << 1;
 			exp -= 0x0001;
 		}
-		/*
-		if(mant < 0x0002)
-		{
-			mant = mant << 9;
-			exp -= 0x0009;
-		}
-		else if(mant < 0x004)
-		{
-			mant = mant << 8;
-			exp -= 0x0008;
-		}
-		else if(mant < 0x008)
-		{
-			mant = mant << 7;
-			exp -= 0x0007;
-		}
-		else if(mant < 0x0010)
-		{
-			mant = mant << 6;
-			exp -= 0x0006;
-		}
-		else if(mant < 0x0020)
-		{
-			mant = mant << 5;
-			exp -= 0x0005;
-		}
-		else if(mant < 0x0040)
-		{
-			mant = mant << 4;
-			exp -= 0x0004;
-		}
-		else if(mant < 0x0080)
-		{
-			mant = mant << 3;
-			exp -= 0x0003;
-		}
-		else if(mant < 0x0100)
-		{
-			mant = mant << 2;
-			exp -= 0x0002;
-		}
-		else if(mant < 0x0200)
-		{
-			mant = mant << 1;
-			exp -= 0x0001;
-		}
-		*/
+
 	}
 	// Check for overflow
 	if(exp > 0x003F)
