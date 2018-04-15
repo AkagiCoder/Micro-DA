@@ -15,13 +15,10 @@
 int main(void)
 {
 	volatile uint16_t ADCvalue;
-	DDRD |= (1 << 6);											// PD.6 is output [PWM]
-	PORTD |= (1 << 2);											// Pull up the resistor for INT0
-	EIMSK |= (1 << INT0);
-	EICRA |= 0x02;
-	
-	// LED
-	DDRB |= (1 << 1);		// PB.1 Output
+	DDRD |= (1 << 6);					// PD.6 is output [PWM]
+	PORTD |= (1 << 2);					// Pull up the resistor for INT0
+	EIMSK |= (1 << INT0);				// Enable interrupt for INT0
+	EICRA |= 0x2;						// Trigger on falling edge
 	
 	// ADC settings
 	ADMUX |= (1 << REFS0);									// AVcc with external capacitor at AREF pin
@@ -49,7 +46,5 @@ int main(void)
 
 ISR(INT0_vect)
 {
-	PORTB ^= (1 << 1);
 	EIFR = (1 << INTF0);
-	_delay_ms(5000);
 }
