@@ -25,14 +25,13 @@ int main(void)
 	
 	// Timer0 settings
 	TCCR1B |= (1 << WGM12);					// CTC mode
-	TCCR1B |= (1 << CS11);
+	TCCR1B |= (1 << CS11);					// Prescalar of 8
 	TIMSK1 |= (1 << OCIE1A);				// CTC interrupt
 	TCNT1 = 0x00;
 	OCR1A = 65535;
 	
 	// Initialize stepperPos
 	stepperPos = 0x06;
-	//PORTB = stepperPos;
 	
 	sei();
     while (1) 
@@ -47,10 +46,10 @@ int main(void)
 // CTC ISR
 ISR(TIMER1_COMPA_vect)
 {
-	OCR1A = 65535 - ADCvalue;
+	OCR1A = 65535 - ADCvalue;		// Speed of the stepper
 	if(ADCvalue > 32)
 	{
-		switch(stepperPos)
+		switch(stepperPos)			// Set next state of stepper
 		{
 			case 0x06:
 				stepperPos = 0x0C;

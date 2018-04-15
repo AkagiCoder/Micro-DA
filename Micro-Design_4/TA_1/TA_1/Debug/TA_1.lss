@@ -3,29 +3,29 @@ TA_1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  0000017c  2**0
+  0 .data         00000000  00800100  00800100  00000188  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000128  00000000  00000000  00000054  2**1
+  1 .text         00000134  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000017c  2**0
+  2 .comment      00000030  00000000  00000000  00000188  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001ac  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001b8  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000028  00000000  00000000  000001e8  2**0
+  4 .debug_aranges 00000028  00000000  00000000  000001f4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000006b5  00000000  00000000  00000210  2**0
+  5 .debug_info   000006b5  00000000  00000000  0000021c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000628  00000000  00000000  000008c5  2**0
+  6 .debug_abbrev 00000628  00000000  00000000  000008d1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000266  00000000  00000000  00000eed  2**0
+  7 .debug_line   0000026c  00000000  00000000  00000ef9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  00001154  2**2
+  8 .debug_frame  00000058  00000000  00000000  00001168  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000334  00000000  00000000  000011a8  2**0
+  9 .debug_str    0000035b  00000000  00000000  000011c0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000084  00000000  00000000  000014dc  2**0
+ 10 .debug_loc    00000091  00000000  00000000  0000151b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000018  00000000  00000000  00001560  2**0
+ 11 .debug_ranges 00000018  00000000  00000000  000015ac  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -66,14 +66,14 @@ Disassembly of section .text:
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
   74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 92 00 	jmp	0x124	; 0x124 <_exit>
+  78:	0c 94 98 00 	jmp	0x130	; 0x130 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <main>:
+#include <stdint.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 
 int main(void)
@@ -176,7 +176,7 @@ int main(void)
   fa:	59 0b       	sbc	r21, r25
   fc:	5a 83       	std	Y+2, r21	; 0x02
   fe:	49 83       	std	Y+1, r20	; 0x01
-		OCR0A = ADCvalue;
+		OCR0A = ADCvalue;					// Adjust motor speed
  100:	89 81       	ldd	r24, Y+1	; 0x01
  102:	9a 81       	ldd	r25, Y+2	; 0x02
  104:	87 bd       	out	0x27, r24	; 39
@@ -187,6 +187,7 @@ int main(void)
 	return 0;
 }
 
+// Switch to turn on and off the motor
 ISR(INT0_vect)
 {
  108:	1f 92       	push	r1
@@ -195,18 +196,25 @@ ISR(INT0_vect)
  10e:	0f 92       	push	r0
  110:	11 24       	eor	r1, r1
  112:	8f 93       	push	r24
-	EIFR = (1 << INTF0);
- 114:	81 e0       	ldi	r24, 0x01	; 1
- 116:	8c bb       	out	0x1c, r24	; 28
- 118:	8f 91       	pop	r24
- 11a:	0f 90       	pop	r0
- 11c:	0f be       	out	0x3f, r0	; 63
- 11e:	0f 90       	pop	r0
- 120:	1f 90       	pop	r1
- 122:	18 95       	reti
+ 114:	9f 93       	push	r25
+	TCCR0A ^= (1 << COM0A1) | (1 << COM0A0);	// Turn off motor
+ 116:	94 b5       	in	r25, 0x24	; 36
+ 118:	80 ec       	ldi	r24, 0xC0	; 192
+ 11a:	89 27       	eor	r24, r25
+ 11c:	84 bd       	out	0x24, r24	; 36
+	EIFR = (1 << INTF0);						// Clear interrupt flag
+ 11e:	81 e0       	ldi	r24, 0x01	; 1
+ 120:	8c bb       	out	0x1c, r24	; 28
+ 122:	9f 91       	pop	r25
+ 124:	8f 91       	pop	r24
+ 126:	0f 90       	pop	r0
+ 128:	0f be       	out	0x3f, r0	; 63
+ 12a:	0f 90       	pop	r0
+ 12c:	1f 90       	pop	r1
+ 12e:	18 95       	reti
 
-00000124 <_exit>:
- 124:	f8 94       	cli
+00000130 <_exit>:
+ 130:	f8 94       	cli
 
-00000126 <__stop_program>:
- 126:	ff cf       	rjmp	.-2      	; 0x126 <__stop_program>
+00000132 <__stop_program>:
+ 132:	ff cf       	rjmp	.-2      	; 0x132 <__stop_program>

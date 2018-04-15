@@ -81,7 +81,7 @@ int main(void)
   84:	80 81       	ld	r24, Z
   86:	80 64       	ori	r24, 0x40	; 64
   88:	80 83       	st	Z, r24
-	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);	// Set prescalar to 128 for 16 MHz
+	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);	// Set prescalar to 128
   8a:	ea e7       	ldi	r30, 0x7A	; 122
   8c:	f0 e0       	ldi	r31, 0x00	; 0
   8e:	80 81       	ld	r24, Z

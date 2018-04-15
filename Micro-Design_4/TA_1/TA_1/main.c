@@ -5,11 +5,9 @@
  * Author : Bryan
  */ 
 
-#define F_CPU 16000000UL
 #include <avr/io.h>
 #include <stdint.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 
 int main(void)
@@ -39,12 +37,14 @@ int main(void)
 		while((ADCSRA & (1 << ADIF)) == 0);	// Wait for conversion
 		ADCvalue = ADC >> 2;
 		ADCvalue = 0xFF - ADCvalue;
-		OCR0A = ADCvalue;
+		OCR0A = ADCvalue;					// Adjust motor speed
     }
 	return 0;
 }
 
+// Switch to turn on and off the motor
 ISR(INT0_vect)
 {
-	EIFR = (1 << INTF0);
+	TCCR0A ^= (1 << COM0A1) | (1 << COM0A0);	// Turn off motor
+	EIFR = (1 << INTF0);						// Clear interrupt flag
 }

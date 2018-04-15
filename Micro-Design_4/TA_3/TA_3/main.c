@@ -12,7 +12,7 @@ int main(void)
 {
 	// ADC settings
 	ADMUX |= (1 << REFS0);									// AVcc with external capacitor at AREF pin
-	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);	// Set prescalar to 128 for 16 MHz
+	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);	// Set prescalar to 128
 	ADCSRA |= (1 << ADEN);									// Enable ADC
 	
 	// PWM Settings
