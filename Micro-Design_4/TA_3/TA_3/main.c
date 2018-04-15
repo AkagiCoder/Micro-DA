@@ -16,7 +16,7 @@ int main(void)
 	ADCSRA |= (1 << ADEN);									// Enable ADC
 	
 	// PWM Settings
-	DDRB = (1 << 1);										// Set OC1A as output (PD6)
+	DDRB = (1 << 1);										// Set OC1A as output (PD1)
 	ICR1 = 5000;											// Set top
 	TCCR1A |= (1 << COM1A1) | (1 << COM1B1);				// Set OC1A high on compare
 	TCCR1A |= (1 << WGM11);
