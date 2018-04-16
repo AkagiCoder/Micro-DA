@@ -10,7 +10,7 @@ uint32_t float_mult(volatile uint32_t a, volatile uint32_t b);
 
 int main(void)
 {
-    float_add(num0, num1);
+    float_mult(num0, num1);
     while (1) 
     {
     }
@@ -130,5 +130,82 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
 
 uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
 {
-	return 0;
+	// Operand a
+	volatile uint8_t exp0 = a >> 23;							// Extract the exponent field of a
+	volatile uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
+	
+	// Operand b
+	volatile uint8_t exp1 = b >> 23;							// Extract the exponent field of b
+	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
+	
+	// Final result
+	volatile uint16_t exp;		// Final exponent
+	volatile uint32_t final;	// Result to be returned
+	
+	// Booth Multiplier Variables
+	volatile uint8_t i;
+	volatile uint64_t A;
+	volatile uint64_t S;
+	volatile uint64_t P;
+	
+	// Compute the sign
+	final |= (a & 0x80000000) ^ (b & 0x80000000);	// Xor the sign bits
+	
+	// Compute the initial exponent
+	exp = (exp0 + exp1) - 127;						// Add the exponents and subtract 127 [rid the redundant bias]
+	if(exp > 0x00FF)								// Early check for overflow
+		return final |= (0x7FFFFFFF);
+		
+	// Multiply the mantissas using Booth's algorithm
+	// m = mant0		x = 25 bits
+	// r = mant1		y = 25 bits
+	// A = S = P = x + y + 1 = 51 bits [USE LONG INT]
+	
+	// Fill register A with m
+	A = mant0;
+	A = A << 26;
+	
+	// Two's complement of m
+	mant0 = ~mant0;
+	mant0 += 1;
+	
+	// Fill register S with -m
+	S = mant0;
+	S = S << 26;
+	S &= 0x0007FFFFFFFFFFFF;
+	
+	// Fill register P with r
+	P = mant1 << 1;
+	
+	for(i = 0; i < 25; i++)
+	{
+		if((P & 3) == 1)
+		{
+			P += A;
+		}
+		else if((P & 3) == 2)
+		{
+			P += S;
+		}
+		P &= 0x0007FFFFFFFFFFFF;		// Mask out the overflow
+		
+		// Shift negative number
+		if(P >= 0x0004000000000000)
+		{
+			P = P >> 1;
+			P |= 0x0004000000000000;
+		}
+		// Shift positive number
+		else
+			P = P >> 1;
+	}
+	P = P >> 1;		// One last shift to complete the Booth algorithm
+	
+	// Normalize the result
+	while(P >= 0x0000000001000000)
+	{
+		P = P >> 1;
+		//exp += 1;
+	}
+	return final;
 }
