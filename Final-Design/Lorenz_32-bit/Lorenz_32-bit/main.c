@@ -139,7 +139,7 @@ uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
 	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
 	
 	// Final result
-	volatile uint16_t exp;		// Final exponent
+	volatile int16_t exp;		// Final exponent
 	volatile uint32_t final;	// Result to be returned
 	
 	// Booth Multiplier Variables
@@ -201,11 +201,28 @@ uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
 	}
 	P = P >> 1;		// One last shift to complete the Booth algorithm
 	
-	// Normalize the result
-	while(P >= 0x0000000001000000)
+	// Adjust decimal point
+	while(P > 0x0000800000000000)
 	{
 		P = P >> 1;
-		//exp += 1;
+		exp += 1;
 	}
+	while(P < 0x00003FFFFFFFFFFF)
+	{
+		P = P << 1;
+		exp -= 1;
+	}
+	
+	// Normalize the result
+	while(P >= 0x0000000001000000)
+		P = P >> 1;
+		
+	mant0 = exp;
+	mant0 = mant0 << 23;
+	final |= mant0;
+	mant0 = P;
+	mant0 &= 0x007FFFFF;
+	final |= mant0;
+	
 	return final;
 }
