@@ -1,23 +1,93 @@
 #include <avr/io.h>
 #include <stdint.h>
 
-volatile uint32_t num0 = 0x41820000;	// 16.25
-volatile uint32_t num1 = 0x42360000;	// 45.5
+//volatile uint32_t num0 = 0x41820000;	// 16.25
+//volatile uint32_t num1 = 0x42360000;	// 45.5
 volatile uint32_t num2 = 0x00000000;
 
-uint32_t float_add(volatile uint32_t a, volatile uint32_t b);
-uint32_t float_mult(volatile uint32_t a, volatile uint32_t b);
+#define SUB		1
+#define ADD		0
+
+// Lorenz constants
+#define SIGMA	0x41200000		// 10
+#define RHO		0x41e00000		// 28
+#define BETA	0x402aaaab		// 8/3 [2.666...]
+
+// Lorenz derivatives
+volatile uint32_t dt = 0x3c23d70a;	// 0.01
+volatile uint32_t dx = 0x00000000;
+volatile uint32_t dy = 0x00000000;
+volatile uint32_t dz = 0x00000000;
+
+// Coordinates
+volatile uint32_t x = 0x3f800000;	// x = 1.0
+volatile uint32_t y = 0x3f800000;	// y = 1.0
+volatile uint32_t z = 0x3f800000;	// z = 1.0
+
+volatile uint32_t temp;
+
+uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP);
+uint32_t float_mult(uint32_t M, uint32_t R);
 
 int main(void)
 {
-    float_mult(num0, num1);
+	volatile uint32_t j = 0;
+	for(j = 0; j < 26; j++)
+	{
+		// dx/dt = SIGMA(y-x)
+		dx = float_add(y, x, SUB);
+		dx = float_mult(SIGMA, dx);
+		dx = float_mult(dx, dt);
+		
+		// dy/dt = x(RHO-z)-y
+		dy = float_add(RHO, z, SUB);
+		dy = float_mult(dy, x);
+		dy = float_add(dy, y, SUB);
+		dy = float_mult(dy, dt);
+		
+		// dz/dt = xy-(BETA)z
+		temp = float_mult(x, y);
+		dz = float_mult(BETA, z);
+		dz = float_add(temp, dz, SUB);
+		dz = float_mult(dz, dt);
+		
+		x = float_add(x, dx, ADD);
+		y = float_add(y, dy, ADD);
+		z = float_add(z, dz, ADD);
+	}
+	
     while (1) 
     {
+		// dx/dt = SIGMA(y-x)
+		dx = float_add(y, x, SUB);
+		dx = float_mult(SIGMA, dx);
+		dx = float_mult(dx, dt);
+		
+		// dy/dt = x(RHO-z)-y
+		dy = float_add(RHO, z, SUB);
+		dy = float_mult(dy, x);
+		dy = float_add(dy, y, SUB);
+		dy = float_mult(dy, dt);
+		
+		// dz/dt = xy-(BETA)z
+		temp = float_mult(x, y);
+		dz = float_mult(BETA, z);
+		dz = float_add(temp, dz, SUB);
+		dz = float_mult(dz, dt);
+		
+		x = float_add(x, dx, ADD);
+		y = float_add(y, dy, ADD);
+		z = float_add(z, dz, ADD);
     }
 }
 
-uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
+uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 {
+	// Save function arguments
+	volatile uint32_t a = A;
+	volatile uint32_t b = B;
+	volatile uint8_t sub = OP;
+	
 	// Operand a
 	volatile uint8_t exp0 = a >> 23;							// Extract the exponent field of a
 	volatile uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
@@ -27,12 +97,16 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
 	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
 	
 	// Final result
-	volatile int16_t exp;		// Final exponent
-	volatile uint32_t final;	// Result to be returned
-	volatile uint32_t mant;		// Final mantissa
+	volatile int16_t exp = 0;		// Final exponent
+	volatile uint32_t final = 0;	// Result to be returned
+	volatile uint32_t mant = 0;		// Final mantissa
 	
 	// Temporary variables
-	volatile uint32_t temp;
+	volatile uint32_t temp = 0;
+	
+	// Check if the operation is subtraction
+	if(sub > 0)
+		b |= 0x80000000;
 	
 	// Adjust and compute the exponent
 	if(exp0 > exp1)						// exp(a) > exp(b)
@@ -97,11 +171,23 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
 		}
 		
 		// Normalize the mantissa
-		while(mant < 0x00800000)
+		if(mant > 0)
+		{
+			while(mant < 0x00800000)
+			{
+				mant = mant << 1;
+				exp -= 1;
+			}
+		}
+		else
+			exp = 0;
+		/*
+		while(mant < 0x00800000 && mant > 0)
 		{
 			mant = mant << 1;
 			exp -= 1;
 		}
+		*/
 	}
 	
 	// Overflow case [Largest value]
@@ -122,14 +208,18 @@ uint32_t float_add(volatile uint32_t a, volatile uint32_t b)
 	mant &= 0x007FFFFF;		// Remove implicit 1
 	temp = exp;
 	temp = temp << 23;		// Shift the exponent into the correct exponent field
-	final |= temp;			// Insert exponent into the final
-	final |= mant;			// Insert mantissa into the final
+	final |= temp;			// Insert exponent into final
+	final |= mant;			// Insert mantissa into final
 	
 	return final;
 }
 
-uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
+uint32_t float_mult(uint32_t M, uint32_t R)
 {
+	// Save function arguments
+	volatile uint32_t a = M;
+	volatile uint32_t b = R;
+	
 	// Operand a
 	volatile uint8_t exp0 = a >> 23;							// Extract the exponent field of a
 	volatile uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
@@ -139,14 +229,14 @@ uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
 	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
 	
 	// Final result
-	volatile int16_t exp;		// Final exponent
-	volatile uint32_t final;	// Result to be returned
+	volatile int16_t exp = 0;		// Final exponent
+	volatile uint32_t final = 0;	// Result to be returned
 	
 	// Booth Multiplier Variables
-	volatile uint8_t i;
-	volatile uint64_t A;
-	volatile uint64_t S;
-	volatile uint64_t P;
+	volatile uint8_t i = 0;
+	volatile uint64_t A = 0;
+	volatile uint64_t S = 0;
+	volatile uint64_t P = 0;
 	
 	// Compute the sign
 	final |= (a & 0x80000000) ^ (b & 0x80000000);	// Xor the sign bits
@@ -201,28 +291,42 @@ uint32_t float_mult(volatile uint32_t a, volatile uint32_t b)
 	}
 	P = P >> 1;		// One last shift to complete the Booth algorithm
 	
-	// Adjust decimal point
-	while(P > 0x0000800000000000)
+	// Normalize the result
+	while(P > 0x00007FFFFFFFFFFF)
 	{
 		P = P >> 1;
 		exp += 1;
 	}
-	while(P < 0x00003FFFFFFFFFFF)
+	while(P < 0x00003FFFFFFFFFFF && P > 0)
 	{
 		P = P << 1;
 		exp -= 1;
 	}
-	
-	// Normalize the result
+
+	// Truncate
 	while(P >= 0x0000000001000000)
 		P = P >> 1;
 		
-	mant0 = exp;
-	mant0 = mant0 << 23;
-	final |= mant0;
-	mant0 = P;
-	mant0 &= 0x007FFFFF;
-	final |= mant0;
+	// Overflow case [Largest value]
+	// Exponent cannot be larger than 254 [with bias of +127]
+	if(exp > 254)
+	{
+		final |= 0x7FFFFFFF;
+		return final;
+	}
+	// Underflow case [Smallest number]
+	// Exponent cannot be smaller than 0 [with bias of +127]
+	else if(exp < 0)
+	{
+		final &= 0x80000000;
+		return final;
+	}
 	
+	mant0 = exp;
+	mant0 = mant0 << 23;		// Extract the final exponent
+	final |= mant0;				// Insert the exponent into final
+	mant0 = P;
+	mant0 &= 0x007FFFFF;		// Extract the final mantissa
+	final |= mant0;				// Insert the mantissa into final
 	return final;
 }
