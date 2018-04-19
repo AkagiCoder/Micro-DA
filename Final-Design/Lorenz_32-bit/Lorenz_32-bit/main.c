@@ -24,15 +24,14 @@ volatile uint32_t x = 0x3f800000;	// x = 1.0
 volatile uint32_t y = 0x3f800000;	// y = 1.0
 volatile uint32_t z = 0x3f800000;	// z = 1.0
 
-volatile uint32_t temp;
-
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP);
 uint32_t float_mult(uint32_t M, uint32_t R);
 
 int main(void)
 {
-	volatile uint32_t j = 0;
-	for(j = 0; j < 26; j++)
+	uint32_t j = 0;
+	uint32_t temp;
+	for(j = 0; j < 101; j++)
 	{
 		// dx/dt = SIGMA(y-x)
 		dx = float_add(y, x, SUB);
@@ -84,29 +83,29 @@ int main(void)
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 {
 	// Save function arguments
-	volatile uint32_t a = A;
-	volatile uint32_t b = B;
-	volatile uint8_t sub = OP;
+	uint32_t a = A;
+	uint32_t b = B;
+	uint8_t sub = OP;
 	
 	// Operand a
-	volatile uint8_t exp0 = a >> 23;							// Extract the exponent field of a
-	volatile uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
+	uint8_t exp0 = a >> 23;							// Extract the exponent field of a
+	uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
 	
 	// Operand b
-	volatile uint8_t exp1 = b >> 23;							// Extract the exponent field of b
-	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
+	uint8_t exp1 = b >> 23;							// Extract the exponent field of b
+	uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
 	
 	// Final result
-	volatile int16_t exp = 0;		// Final exponent
-	volatile uint32_t final = 0;	// Result to be returned
-	volatile uint32_t mant = 0;		// Final mantissa
+	int16_t exp = 0;		// Final exponent
+	uint32_t final = 0;	// Result to be returned
+	uint32_t mant = 0;		// Final mantissa
 	
 	// Temporary variables
-	volatile uint32_t temp = 0;
+	uint32_t temp = 0;
 	
 	// Check if the operation is subtraction
 	if(sub > 0)
-		b |= 0x80000000;
+		b ^= 0x80000000;
 	
 	// Adjust and compute the exponent
 	if(exp0 > exp1)						// exp(a) > exp(b)
@@ -210,26 +209,26 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 uint32_t float_mult(uint32_t M, uint32_t R)
 {
 	// Save function arguments
-	volatile uint32_t a = M;
-	volatile uint32_t b = R;
+	uint32_t a = M;
+	uint32_t b = R;
 	
 	// Operand a
-	volatile uint8_t exp0 = a >> 23;							// Extract the exponent field of a
-	volatile uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
+	uint8_t exp0 = a >> 23;							// Extract the exponent field of a
+	uint32_t mant0 = (a & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of a
 	
 	// Operand b
-	volatile uint8_t exp1 = b >> 23;							// Extract the exponent field of b
-	volatile uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
+	uint8_t exp1 = b >> 23;							// Extract the exponent field of b
+	uint32_t mant1 = (b & 0x007FFFFF) | 0x00800000;	// Extract the mantissa field of b
 	
 	// Final result
-	volatile int16_t exp = 0;		// Final exponent
-	volatile uint32_t final = 0;	// Result to be returned
+	int16_t exp = 0;		// Final exponent
+	uint32_t final = 0;	// Result to be returned
 	
 	// Booth Multiplier Variables
-	volatile uint8_t i = 0;
-	volatile uint64_t A = 0;
-	volatile uint64_t S = 0;
-	volatile uint64_t P = 0;
+	uint8_t i = 0;
+	uint64_t A = 0;
+	uint64_t S = 0;
+	uint64_t P = 0;
 	
 	// Compute the sign
 	final |= (a & 0x80000000) ^ (b & 0x80000000);	// Xor the sign bits
