@@ -181,13 +181,6 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 		}
 		else
 			exp = 0;
-		/*
-		while(mant < 0x00800000 && mant > 0)
-		{
-			mant = mant << 1;
-			exp -= 1;
-		}
-		*/
 	}
 	
 	// Overflow case [Largest value]

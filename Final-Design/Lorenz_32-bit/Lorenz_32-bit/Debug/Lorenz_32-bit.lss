@@ -641,7 +641,6 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 			exp = 0;
      3fc:	1d 8a       	std	Y+21, r1	; 0x15
      3fe:	1c 8a       	std	Y+20, r1	; 0x14
-		*/
 	}
 	
 	// Overflow case [Largest value]
