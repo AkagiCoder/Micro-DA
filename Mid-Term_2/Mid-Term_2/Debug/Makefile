@@ -37,7 +37,8 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../main.c
+../main.c \
+../nrf24l01.c
 
 
 PREPROCESSING_SRCS += 
@@ -47,16 +48,20 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-main.o
+main.o \
+nrf24l01.o
 
 OBJS_AS_ARGS +=  \
-main.o
+main.o \
+nrf24l01.o
 
 C_DEPS +=  \
-main.d
+main.d \
+nrf24l01.d
 
 C_DEPS_AS_ARGS +=  \
-main.d
+main.d \
+nrf24l01.d
 
 OUTPUT_FILE_PATH +=Mid-Term_2.elf
 
@@ -72,6 +77,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

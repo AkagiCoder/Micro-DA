@@ -3,31 +3,31 @@ Lorenz_32-bit.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000010  00800100  00000d50  00000de4  2**0
+  0 .data         00000010  00800100  00000d60  00000df4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000d50  00000000  00000000  00000094  2**1
+  1 .text         00000d60  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          0000000c  00800110  00800110  00000df4  2**0
+  2 .bss          0000000c  00800110  00800110  00000e04  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000df4  2**0
+  3 .comment      00000030  00000000  00000000  00000e04  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000e24  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000e34  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000030  00000000  00000000  00000e60  2**0
+  5 .debug_aranges 00000058  00000000  00000000  00000e70  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000b52  00000000  00000000  00000e90  2**0
+  6 .debug_info   00000c66  00000000  00000000  00000ec8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000069b  00000000  00000000  000019e2  2**0
+  7 .debug_abbrev 00000744  00000000  00000000  00001b2e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000050a  00000000  00000000  0000207d  2**0
+  8 .debug_line   000005f7  00000000  00000000  00002272  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000fc  00000000  00000000  00002588  2**2
+  9 .debug_frame  00000158  00000000  00000000  0000286c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000003a8  00000000  00000000  00002684  2**0
+ 10 .debug_str    000003df  00000000  00000000  000029c4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000f30  00000000  00000000  00002a2c  2**0
+ 11 .debug_loc    00000fe2  00000000  00000000  00002da3  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000020  00000000  00000000  0000395c  2**0
+ 12 .debug_ranges 00000048  00000000  00000000  00003d85  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -72,7 +72,7 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e0 e5       	ldi	r30, 0x50	; 80
+  7a:	e0 e6       	ldi	r30, 0x60	; 96
   7c:	fd e0       	ldi	r31, 0x0D	; 13
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
@@ -95,15 +95,15 @@ Disassembly of section .text:
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 97 03 	call	0x72e	; 0x72e <main>
-  9e:	0c 94 a6 06 	jmp	0xd4c	; 0xd4c <_exit>
+  9e:	0c 94 ae 06 	jmp	0xd5c	; 0xd5c <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000a6 <float_add>:
-		z = float_add(z, dz, ADD);
-    }
-}
+//-------------------------------------------------
+//------------- FLOATING POINT FUNCTIONS ----------
+//-------------------------------------------------
 
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 {
@@ -661,7 +661,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  3b2:	80 e0       	ldi	r24, 0x00	; 0
  3b4:	90 e0       	ldi	r25, 0x00	; 0
  3b6:	0a e1       	ldi	r16, 0x1A	; 26
- 3b8:	0e 94 4e 06 	call	0xc9c	; 0xc9c <__ashldi3>
+ 3b8:	0e 94 56 06 	call	0xcac	; 0xcac <__ashldi3>
  3bc:	f2 2f       	mov	r31, r18
  3be:	b3 2f       	mov	r27, r19
  3c0:	49 8b       	std	Y+17, r20	; 0x11
@@ -691,7 +691,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  3e2:	70 e0       	ldi	r23, 0x00	; 0
  3e4:	80 e0       	ldi	r24, 0x00	; 0
  3e6:	90 e0       	ldi	r25, 0x00	; 0
- 3e8:	0e 94 4e 06 	call	0xc9c	; 0xc9c <__ashldi3>
+ 3e8:	0e 94 56 06 	call	0xcac	; 0xcac <__ashldi3>
 	S &= 0x0007FFFFFFFFFFFF;
  3ec:	2a 87       	std	Y+10, r18	; 0x0a
  3ee:	3b 87       	std	Y+11, r19	; 0x0b
@@ -744,7 +744,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  43e:	80 e0       	ldi	r24, 0x00	; 0
  440:	90 e0       	ldi	r25, 0x00	; 0
  442:	a1 e0       	ldi	r26, 0x01	; 1
- 444:	0e 94 9a 06 	call	0xd34	; 0xd34 <__cmpdi2_s8>
+ 444:	0e 94 a2 06 	call	0xd44	; 0xd44 <__cmpdi2_s8>
  448:	d1 f4       	brne	.+52     	; 0x47e <__LOCK_REGION_LENGTH__+0x7e>
 		{
 			P += A;
@@ -764,7 +764,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  464:	fe 80       	ldd	r15, Y+6	; 0x06
  466:	0f 81       	ldd	r16, Y+7	; 0x07
  468:	18 85       	ldd	r17, Y+8	; 0x08
- 46a:	0e 94 85 06 	call	0xd0a	; 0xd0a <__adddi3>
+ 46a:	0e 94 8d 06 	call	0xd1a	; 0xd1a <__adddi3>
  46e:	29 83       	std	Y+1, r18	; 0x01
  470:	3a 83       	std	Y+2, r19	; 0x02
  472:	4b 83       	std	Y+3, r20	; 0x03
@@ -784,7 +784,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  48a:	80 e0       	ldi	r24, 0x00	; 0
  48c:	90 e0       	ldi	r25, 0x00	; 0
  48e:	a2 e0       	ldi	r26, 0x02	; 2
- 490:	0e 94 9a 06 	call	0xd34	; 0xd34 <__cmpdi2_s8>
+ 490:	0e 94 a2 06 	call	0xd44	; 0xd44 <__cmpdi2_s8>
  494:	c1 f4       	brne	.+48     	; 0x4c6 <__LOCK_REGION_LENGTH__+0xc6>
 		{
 			P += S;
@@ -803,7 +803,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  4ae:	fe 80       	ldd	r15, Y+6	; 0x06
  4b0:	0f 81       	ldd	r16, Y+7	; 0x07
  4b2:	18 85       	ldd	r17, Y+8	; 0x08
- 4b4:	0e 94 85 06 	call	0xd0a	; 0xd0a <__adddi3>
+ 4b4:	0e 94 8d 06 	call	0xd1a	; 0xd1a <__adddi3>
  4b8:	29 83       	std	Y+1, r18	; 0x01
  4ba:	3a 83       	std	Y+2, r19	; 0x02
  4bc:	4b 83       	std	Y+3, r20	; 0x03
@@ -841,7 +841,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 		{
 			P = P >> 1;
  4f2:	01 e0       	ldi	r16, 0x01	; 1
- 4f4:	0e 94 69 06 	call	0xcd2	; 0xcd2 <__lshrdi3>
+ 4f4:	0e 94 71 06 	call	0xce2	; 0xce2 <__lshrdi3>
 			P |= 0x0004000000000000;
  4f8:	29 83       	std	Y+1, r18	; 0x01
  4fa:	3a 83       	std	Y+2, r19	; 0x02
@@ -866,7 +866,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  518:	8a 2f       	mov	r24, r26
  51a:	90 e0       	ldi	r25, 0x00	; 0
  51c:	01 e0       	ldi	r16, 0x01	; 1
- 51e:	0e 94 69 06 	call	0xcd2	; 0xcd2 <__lshrdi3>
+ 51e:	0e 94 71 06 	call	0xce2	; 0xce2 <__lshrdi3>
  522:	29 83       	std	Y+1, r18	; 0x01
  524:	3a 83       	std	Y+2, r19	; 0x02
  526:	4b 83       	std	Y+3, r20	; 0x03
@@ -901,7 +901,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  548:	8f 81       	ldd	r24, Y+7	; 0x07
  54a:	98 85       	ldd	r25, Y+8	; 0x08
  54c:	01 e0       	ldi	r16, 0x01	; 1
- 54e:	0e 94 69 06 	call	0xcd2	; 0xcd2 <__lshrdi3>
+ 54e:	0e 94 71 06 	call	0xce2	; 0xce2 <__lshrdi3>
  552:	12 2f       	mov	r17, r18
  554:	b3 2f       	mov	r27, r19
  556:	f4 2f       	mov	r31, r20
@@ -938,7 +938,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  58a:	8e 2d       	mov	r24, r14
  58c:	9f 2d       	mov	r25, r15
  58e:	01 e0       	ldi	r16, 0x01	; 1
- 590:	0e 94 69 06 	call	0xcd2	; 0xcd2 <__lshrdi3>
+ 590:	0e 94 71 06 	call	0xce2	; 0xce2 <__lshrdi3>
  594:	12 2f       	mov	r17, r18
  596:	03 2f       	mov	r16, r19
  598:	f4 2f       	mov	r31, r20
@@ -986,7 +986,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  5d4:	8e 2d       	mov	r24, r14
  5d6:	9f 2d       	mov	r25, r15
  5d8:	af ef       	ldi	r26, 0xFF	; 255
- 5da:	0e 94 8e 06 	call	0xd1c	; 0xd1c <__adddi3_s8>
+ 5da:	0e 94 96 06 	call	0xd2c	; 0xd2c <__adddi3_s8>
  5de:	2d 3f       	cpi	r18, 0xFD	; 253
  5e0:	3f 4f       	sbci	r19, 0xFF	; 255
  5e2:	4f 4f       	sbci	r20, 0xFF	; 255
@@ -1011,7 +1011,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  604:	8e 2d       	mov	r24, r14
  606:	9f 2d       	mov	r25, r15
  608:	01 e0       	ldi	r16, 0x01	; 1
- 60a:	0e 94 4e 06 	call	0xc9c	; 0xc9c <__ashldi3>
+ 60a:	0e 94 56 06 	call	0xcac	; 0xcac <__ashldi3>
  60e:	12 2f       	mov	r17, r18
  610:	03 2f       	mov	r16, r19
  612:	f4 2f       	mov	r31, r20
@@ -1031,7 +1031,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 	}
 	while(P < 0x00003FFFFFFFFFFF && P > 0)
  624:	af ef       	ldi	r26, 0xFF	; 255
- 626:	0e 94 8e 06 	call	0xd1c	; 0xd1c <__adddi3_s8>
+ 626:	0e 94 96 06 	call	0xd2c	; 0xd2c <__adddi3_s8>
  62a:	2d 3f       	cpi	r18, 0xFD	; 253
  62c:	3f 4f       	sbci	r19, 0xFF	; 255
  62e:	4f 4f       	sbci	r20, 0xFF	; 255
@@ -1079,7 +1079,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  674:	8e 2d       	mov	r24, r14
  676:	9f 2d       	mov	r25, r15
  678:	01 e0       	ldi	r16, 0x01	; 1
- 67a:	0e 94 69 06 	call	0xcd2	; 0xcd2 <__lshrdi3>
+ 67a:	0e 94 71 06 	call	0xce2	; 0xce2 <__lshrdi3>
  67e:	12 2f       	mov	r17, r18
  680:	b3 2f       	mov	r27, r19
  682:	f4 2f       	mov	r31, r20
@@ -1171,6 +1171,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  6f2:	55 2a       	or	r5, r21
  6f4:	66 2a       	or	r6, r22
  6f6:	77 2a       	or	r7, r23
+}
  6f8:	c3 01       	movw	r24, r6
  6fa:	b2 01       	movw	r22, r4
  6fc:	63 96       	adiw	r28, 0x13	; 19
@@ -1200,540 +1201,560 @@ uint32_t float_mult(uint32_t M, uint32_t R)
  72c:	08 95       	ret
 
 0000072e <main>:
-
-uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP);
-uint32_t float_mult(uint32_t M, uint32_t R);
+void i2c_write(unsigned char data);
+void i2c_start(void);
+void i2c_stop(void);
 
 int main(void)
 {
  72e:	e1 2c       	mov	r14, r1
  730:	f1 2c       	mov	r15, r1
-	uint32_t j = 0;
-	uint32_t temp;
-	for(j = 0; j < 101; j++)
+ 732:	62 c1       	rjmp	.+708    	; 0x9f8 <__stack+0xf9>
+	for(i = 0; i < 100; i++)
 	{
-		// dx/dt = SIGMA(y-x)
-		dx = float_add(y, x, SUB);
- 732:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
- 736:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
- 73a:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
- 73e:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
- 742:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
- 746:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
- 74a:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
- 74e:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
- 752:	01 e0       	ldi	r16, 0x01	; 1
- 754:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 758:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- 75c:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- 760:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- 764:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
-		dx = float_mult(SIGMA, dx);
- 768:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
- 76c:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
- 770:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
- 774:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
- 778:	60 e0       	ldi	r22, 0x00	; 0
- 77a:	70 e0       	ldi	r23, 0x00	; 0
- 77c:	80 e2       	ldi	r24, 0x20	; 32
- 77e:	91 e4       	ldi	r25, 0x41	; 65
- 780:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 784:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- 788:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- 78c:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- 790:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
-		dx = float_mult(dx, dt);
- 794:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- 798:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- 79c:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- 7a0:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- 7a4:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <dx>
- 7a8:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <dx+0x1>
- 7ac:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <dx+0x2>
- 7b0:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <dx+0x3>
- 7b4:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 7b8:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- 7bc:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- 7c0:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- 7c4:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
-		
-		// dy/dt = x(RHO-z)-y
-		dy = float_add(RHO, z, SUB);
- 7c8:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
- 7cc:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
- 7d0:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
- 7d4:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
- 7d8:	60 e0       	ldi	r22, 0x00	; 0
- 7da:	70 e0       	ldi	r23, 0x00	; 0
- 7dc:	80 ee       	ldi	r24, 0xE0	; 224
- 7de:	91 e4       	ldi	r25, 0x41	; 65
- 7e0:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 7e4:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- 7e8:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- 7ec:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- 7f0:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
-		dy = float_mult(dy, x);
- 7f4:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
- 7f8:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
- 7fc:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
- 800:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
- 804:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- 808:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- 80c:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- 810:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- 814:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 818:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- 81c:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- 820:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- 824:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
-		dy = float_add(dy, y, SUB);
- 828:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
- 82c:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
- 830:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
- 834:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
- 838:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- 83c:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- 840:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- 844:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- 848:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 84c:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- 850:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- 854:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- 858:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
-		dy = float_mult(dy, dt);
- 85c:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- 860:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- 864:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- 868:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- 86c:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- 870:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- 874:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- 878:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- 87c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 880:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- 884:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- 888:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- 88c:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
-		
-		// dz/dt = xy-(BETA)z
-		temp = float_mult(x, y);
- 890:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
- 894:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
- 898:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
- 89c:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
- 8a0:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
- 8a4:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
- 8a8:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
- 8ac:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
- 8b0:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 8b4:	4b 01       	movw	r8, r22
- 8b6:	5c 01       	movw	r10, r24
-		dz = float_mult(BETA, z);
- 8b8:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
- 8bc:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
- 8c0:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
- 8c4:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
- 8c8:	6b ea       	ldi	r22, 0xAB	; 171
- 8ca:	7a ea       	ldi	r23, 0xAA	; 170
- 8cc:	8a e2       	ldi	r24, 0x2A	; 42
- 8ce:	90 e4       	ldi	r25, 0x40	; 64
- 8d0:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 8d4:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- 8d8:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- 8dc:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- 8e0:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
-		dz = float_add(temp, dz, SUB);
- 8e4:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
- 8e8:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
- 8ec:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
- 8f0:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
- 8f4:	c5 01       	movw	r24, r10
- 8f6:	b4 01       	movw	r22, r8
- 8f8:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 8fc:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- 900:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- 904:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- 908:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
-		dz = float_mult(dz, dt);
- 90c:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- 910:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- 914:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- 918:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- 91c:	60 91 10 01 	lds	r22, 0x0110	; 0x800110 <__data_end>
- 920:	70 91 11 01 	lds	r23, 0x0111	; 0x800111 <__data_end+0x1>
- 924:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <__data_end+0x2>
- 928:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <__data_end+0x3>
- 92c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- 930:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- 934:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- 938:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- 93c:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
-		
-		x = float_add(x, dx, ADD);
- 940:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
- 944:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
- 948:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
- 94c:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
- 950:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
- 954:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
- 958:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
- 95c:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
- 960:	00 e0       	ldi	r16, 0x00	; 0
- 962:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 966:	60 93 08 01 	sts	0x0108, r22	; 0x800108 <x>
- 96a:	70 93 09 01 	sts	0x0109, r23	; 0x800109 <x+0x1>
- 96e:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <x+0x2>
- 972:	90 93 0b 01 	sts	0x010B, r25	; 0x80010b <x+0x3>
-		y = float_add(y, dy, ADD);
- 976:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <dy>
- 97a:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <dy+0x1>
- 97e:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <dy+0x2>
- 982:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <dy+0x3>
- 986:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
- 98a:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
- 98e:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
- 992:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
- 996:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 99a:	60 93 04 01 	sts	0x0104, r22	; 0x800104 <y>
- 99e:	70 93 05 01 	sts	0x0105, r23	; 0x800105 <y+0x1>
- 9a2:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <y+0x2>
- 9a6:	90 93 07 01 	sts	0x0107, r25	; 0x800107 <y+0x3>
-		z = float_add(z, dz, ADD);
- 9aa:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
- 9ae:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
- 9b2:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
- 9b6:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
- 9ba:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <__data_start>
- 9be:	70 91 01 01 	lds	r23, 0x0101	; 0x800101 <__data_start+0x1>
- 9c2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_start+0x2>
- 9c6:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <__data_start+0x3>
- 9ca:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- 9ce:	60 93 00 01 	sts	0x0100, r22	; 0x800100 <__data_start>
- 9d2:	70 93 01 01 	sts	0x0101, r23	; 0x800101 <__data_start+0x1>
- 9d6:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_start+0x2>
- 9da:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <__data_start+0x3>
- 9de:	8f ef       	ldi	r24, 0xFF	; 255
- 9e0:	e8 1a       	sub	r14, r24
- 9e2:	f8 0a       	sbc	r15, r24
-
+		for(j = 0; j < 100; j++)
+		{
+			// dx/dt = SIGMA(y-x)
+			dx = float_add(y, x, SUB);
+ 734:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
+ 738:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
+ 73c:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
+ 740:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
+ 744:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
+ 748:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
+ 74c:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
+ 750:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
+ 754:	01 e0       	ldi	r16, 0x01	; 1
+ 756:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 75a:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ 75e:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ 762:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ 766:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+			dx = float_mult(SIGMA, dx);
+ 76a:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
+ 76e:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
+ 772:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
+ 776:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
+ 77a:	60 e0       	ldi	r22, 0x00	; 0
+ 77c:	70 e0       	ldi	r23, 0x00	; 0
+ 77e:	80 e2       	ldi	r24, 0x20	; 32
+ 780:	91 e4       	ldi	r25, 0x41	; 65
+ 782:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 786:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ 78a:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ 78e:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ 792:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+			dx = float_mult(dx, dt);
+ 796:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ 79a:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ 79e:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ 7a2:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ 7a6:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <dx>
+ 7aa:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <dx+0x1>
+ 7ae:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <dx+0x2>
+ 7b2:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <dx+0x3>
+ 7b6:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 7ba:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ 7be:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ 7c2:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ 7c6:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+				
+			// dy/dt = x(RHO-z)-y
+			dy = float_add(RHO, z, SUB);
+ 7ca:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
+ 7ce:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
+ 7d2:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
+ 7d6:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
+ 7da:	60 e0       	ldi	r22, 0x00	; 0
+ 7dc:	70 e0       	ldi	r23, 0x00	; 0
+ 7de:	80 ee       	ldi	r24, 0xE0	; 224
+ 7e0:	91 e4       	ldi	r25, 0x41	; 65
+ 7e2:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 7e6:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ 7ea:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ 7ee:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ 7f2:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+			dy = float_mult(dy, x);
+ 7f6:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
+ 7fa:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
+ 7fe:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
+ 802:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
+ 806:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ 80a:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ 80e:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ 812:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ 816:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 81a:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ 81e:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ 822:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ 826:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+			dy = float_add(dy, y, SUB);
+ 82a:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
+ 82e:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
+ 832:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
+ 836:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
+ 83a:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ 83e:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ 842:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ 846:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ 84a:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 84e:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ 852:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ 856:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ 85a:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+			dy = float_mult(dy, dt);
+ 85e:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ 862:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ 866:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ 86a:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ 86e:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ 872:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ 876:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ 87a:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ 87e:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 882:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ 886:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ 88a:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ 88e:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+				
+			// dz/dt = xy-(BETA)z
+			temp = float_mult(x, y);
+ 892:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
+ 896:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
+ 89a:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
+ 89e:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
+ 8a2:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
+ 8a6:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
+ 8aa:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
+ 8ae:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
+ 8b2:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 8b6:	4b 01       	movw	r8, r22
+ 8b8:	5c 01       	movw	r10, r24
+			dz = float_mult(BETA, z);
+ 8ba:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
+ 8be:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
+ 8c2:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
+ 8c6:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
+ 8ca:	6b ea       	ldi	r22, 0xAB	; 171
+ 8cc:	7a ea       	ldi	r23, 0xAA	; 170
+ 8ce:	8a e2       	ldi	r24, 0x2A	; 42
+ 8d0:	90 e4       	ldi	r25, 0x40	; 64
+ 8d2:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 8d6:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ 8da:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ 8de:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ 8e2:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+			dz = float_add(temp, dz, SUB);
+ 8e6:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
+ 8ea:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
+ 8ee:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
+ 8f2:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
+ 8f6:	c5 01       	movw	r24, r10
+ 8f8:	b4 01       	movw	r22, r8
+ 8fa:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 8fe:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ 902:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ 906:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ 90a:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+			dz = float_mult(dz, dt);
+ 90e:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ 912:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ 916:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ 91a:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ 91e:	60 91 10 01 	lds	r22, 0x0110	; 0x800110 <__data_end>
+ 922:	70 91 11 01 	lds	r23, 0x0111	; 0x800111 <__data_end+0x1>
+ 926:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <__data_end+0x2>
+ 92a:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <__data_end+0x3>
+ 92e:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ 932:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ 936:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ 93a:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ 93e:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+				
+			x = float_add(x, dx, ADD);
+ 942:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
+ 946:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
+ 94a:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
+ 94e:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
+ 952:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
+ 956:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
+ 95a:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
+ 95e:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
+ 962:	00 e0       	ldi	r16, 0x00	; 0
+ 964:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 968:	60 93 08 01 	sts	0x0108, r22	; 0x800108 <x>
+ 96c:	70 93 09 01 	sts	0x0109, r23	; 0x800109 <x+0x1>
+ 970:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <x+0x2>
+ 974:	90 93 0b 01 	sts	0x010B, r25	; 0x80010b <x+0x3>
+			y = float_add(y, dy, ADD);
+ 978:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <dy>
+ 97c:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <dy+0x1>
+ 980:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <dy+0x2>
+ 984:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <dy+0x3>
+ 988:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
+ 98c:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
+ 990:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
+ 994:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
+ 998:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 99c:	60 93 04 01 	sts	0x0104, r22	; 0x800104 <y>
+ 9a0:	70 93 05 01 	sts	0x0105, r23	; 0x800105 <y+0x1>
+ 9a4:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <y+0x2>
+ 9a8:	90 93 07 01 	sts	0x0107, r25	; 0x800107 <y+0x3>
+			z = float_add(z, dz, ADD);
+ 9ac:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
+ 9b0:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
+ 9b4:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
+ 9b8:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
+ 9bc:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <__data_start>
+ 9c0:	70 91 01 01 	lds	r23, 0x0101	; 0x800101 <__data_start+0x1>
+ 9c4:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_start+0x2>
+ 9c8:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <__data_start+0x3>
+ 9cc:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ 9d0:	60 93 00 01 	sts	0x0100, r22	; 0x800100 <__data_start>
+ 9d4:	70 93 01 01 	sts	0x0101, r23	; 0x800101 <__data_start+0x1>
+ 9d8:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_start+0x2>
+ 9dc:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <__data_start+0x3>
+ 9e0:	21 96       	adiw	r28, 0x01	; 1
+	uint32_t j = 0;
+	uint32_t i = 0;
+	uint32_t temp;
+	for(i = 0; i < 100; i++)
+	{
+		for(j = 0; j < 100; j++)
+ 9e2:	c4 36       	cpi	r28, 0x64	; 100
+ 9e4:	d1 05       	cpc	r29, r1
+ 9e6:	09 f0       	breq	.+2      	; 0x9ea <__stack+0xeb>
+ 9e8:	a5 ce       	rjmp	.-694    	; 0x734 <main+0x6>
+ 9ea:	8f ef       	ldi	r24, 0xFF	; 255
+ 9ec:	e8 1a       	sub	r14, r24
+ 9ee:	f8 0a       	sbc	r15, r24
 int main(void)
 {
 	uint32_t j = 0;
+	uint32_t i = 0;
 	uint32_t temp;
-	for(j = 0; j < 101; j++)
- 9e4:	85 e6       	ldi	r24, 0x65	; 101
- 9e6:	e8 16       	cp	r14, r24
- 9e8:	f1 04       	cpc	r15, r1
- 9ea:	09 f0       	breq	.+2      	; 0x9ee <__stack+0xef>
- 9ec:	a2 ce       	rjmp	.-700    	; 0x732 <main+0x4>
-	}
+	for(i = 0; i < 100; i++)
+ 9f0:	84 e6       	ldi	r24, 0x64	; 100
+ 9f2:	e8 16       	cp	r14, r24
+ 9f4:	f1 04       	cpc	r15, r1
+ 9f6:	19 f0       	breq	.+6      	; 0x9fe <__stack+0xff>
+void i2c_write(unsigned char data);
+void i2c_start(void);
+void i2c_stop(void);
+
+int main(void)
+{
+ 9f8:	c0 e0       	ldi	r28, 0x00	; 0
+ 9fa:	d0 e0       	ldi	r29, 0x00	; 0
+ 9fc:	9b ce       	rjmp	.-714    	; 0x734 <main+0x6>
+	*/
 	
     while (1) 
     {
 		// dx/dt = SIGMA(y-x)
 		dx = float_add(y, x, SUB);
- 9ee:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
- 9f2:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
- 9f6:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
- 9fa:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
- 9fe:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
- a02:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
- a06:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
- a0a:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
- a0e:	01 e0       	ldi	r16, 0x01	; 1
- a10:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- a14:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- a18:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- a1c:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- a20:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+ 9fe:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
+ a02:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
+ a06:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
+ a0a:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
+ a0e:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
+ a12:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
+ a16:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
+ a1a:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
+ a1e:	01 e0       	ldi	r16, 0x01	; 1
+ a20:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ a24:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ a28:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ a2c:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ a30:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
 		dx = float_mult(SIGMA, dx);
- a24:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
- a28:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
- a2c:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
- a30:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
- a34:	60 e0       	ldi	r22, 0x00	; 0
- a36:	70 e0       	ldi	r23, 0x00	; 0
- a38:	80 e2       	ldi	r24, 0x20	; 32
- a3a:	91 e4       	ldi	r25, 0x41	; 65
- a3c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- a40:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- a44:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- a48:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- a4c:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+ a34:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
+ a38:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
+ a3c:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
+ a40:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
+ a44:	60 e0       	ldi	r22, 0x00	; 0
+ a46:	70 e0       	ldi	r23, 0x00	; 0
+ a48:	80 e2       	ldi	r24, 0x20	; 32
+ a4a:	91 e4       	ldi	r25, 0x41	; 65
+ a4c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ a50:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ a54:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ a58:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ a5c:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
 		dx = float_mult(dx, dt);
- a50:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- a54:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- a58:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- a5c:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- a60:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <dx>
- a64:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <dx+0x1>
- a68:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <dx+0x2>
- a6c:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <dx+0x3>
- a70:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- a74:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
- a78:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
- a7c:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
- a80:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
+ a60:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ a64:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ a68:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ a6c:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ a70:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <dx>
+ a74:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <dx+0x1>
+ a78:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <dx+0x2>
+ a7c:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <dx+0x3>
+ a80:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ a84:	60 93 18 01 	sts	0x0118, r22	; 0x800118 <dx>
+ a88:	70 93 19 01 	sts	0x0119, r23	; 0x800119 <dx+0x1>
+ a8c:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <dx+0x2>
+ a90:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <dx+0x3>
 		
 		// dy/dt = x(RHO-z)-y
 		dy = float_add(RHO, z, SUB);
- a84:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
- a88:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
- a8c:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
- a90:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
- a94:	60 e0       	ldi	r22, 0x00	; 0
- a96:	70 e0       	ldi	r23, 0x00	; 0
- a98:	80 ee       	ldi	r24, 0xE0	; 224
- a9a:	91 e4       	ldi	r25, 0x41	; 65
- a9c:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- aa0:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- aa4:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- aa8:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- aac:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+ a94:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
+ a98:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
+ a9c:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
+ aa0:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
+ aa4:	60 e0       	ldi	r22, 0x00	; 0
+ aa6:	70 e0       	ldi	r23, 0x00	; 0
+ aa8:	80 ee       	ldi	r24, 0xE0	; 224
+ aaa:	91 e4       	ldi	r25, 0x41	; 65
+ aac:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ ab0:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ ab4:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ ab8:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ abc:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
 		dy = float_mult(dy, x);
- ab0:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
- ab4:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
- ab8:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
- abc:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
- ac0:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- ac4:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- ac8:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- acc:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- ad0:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- ad4:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- ad8:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- adc:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- ae0:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+ ac0:	20 91 08 01 	lds	r18, 0x0108	; 0x800108 <x>
+ ac4:	30 91 09 01 	lds	r19, 0x0109	; 0x800109 <x+0x1>
+ ac8:	40 91 0a 01 	lds	r20, 0x010A	; 0x80010a <x+0x2>
+ acc:	50 91 0b 01 	lds	r21, 0x010B	; 0x80010b <x+0x3>
+ ad0:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ ad4:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ ad8:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ adc:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ ae0:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ ae4:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ ae8:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ aec:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ af0:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
 		dy = float_add(dy, y, SUB);
- ae4:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
- ae8:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
- aec:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
- af0:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
- af4:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- af8:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- afc:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- b00:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- b04:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- b08:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- b0c:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- b10:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- b14:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+ af4:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
+ af8:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
+ afc:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
+ b00:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
+ b04:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ b08:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ b0c:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ b10:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ b14:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ b18:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ b1c:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ b20:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ b24:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
 		dy = float_mult(dy, dt);
- b18:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- b1c:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- b20:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- b24:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- b28:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
- b2c:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
- b30:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
- b34:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
- b38:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- b3c:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
- b40:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
- b44:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
- b48:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
+ b28:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ b2c:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ b30:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ b34:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ b38:	60 91 14 01 	lds	r22, 0x0114	; 0x800114 <dy>
+ b3c:	70 91 15 01 	lds	r23, 0x0115	; 0x800115 <dy+0x1>
+ b40:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <dy+0x2>
+ b44:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <dy+0x3>
+ b48:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ b4c:	60 93 14 01 	sts	0x0114, r22	; 0x800114 <dy>
+ b50:	70 93 15 01 	sts	0x0115, r23	; 0x800115 <dy+0x1>
+ b54:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <dy+0x2>
+ b58:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <dy+0x3>
 		
 		// dz/dt = xy-(BETA)z
 		temp = float_mult(x, y);
- b4c:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
- b50:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
- b54:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
- b58:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
- b5c:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
- b60:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
- b64:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
- b68:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
- b6c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- b70:	6b 01       	movw	r12, r22
- b72:	7c 01       	movw	r14, r24
+ b5c:	20 91 04 01 	lds	r18, 0x0104	; 0x800104 <y>
+ b60:	30 91 05 01 	lds	r19, 0x0105	; 0x800105 <y+0x1>
+ b64:	40 91 06 01 	lds	r20, 0x0106	; 0x800106 <y+0x2>
+ b68:	50 91 07 01 	lds	r21, 0x0107	; 0x800107 <y+0x3>
+ b6c:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
+ b70:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
+ b74:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
+ b78:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
+ b7c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ b80:	6b 01       	movw	r12, r22
+ b82:	7c 01       	movw	r14, r24
 		dz = float_mult(BETA, z);
- b74:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
- b78:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
- b7c:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
- b80:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
- b84:	6b ea       	ldi	r22, 0xAB	; 171
- b86:	7a ea       	ldi	r23, 0xAA	; 170
- b88:	8a e2       	ldi	r24, 0x2A	; 42
- b8a:	90 e4       	ldi	r25, 0x40	; 64
- b8c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- b90:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- b94:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- b98:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- b9c:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+ b84:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__data_start>
+ b88:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__data_start+0x1>
+ b8c:	40 91 02 01 	lds	r20, 0x0102	; 0x800102 <__data_start+0x2>
+ b90:	50 91 03 01 	lds	r21, 0x0103	; 0x800103 <__data_start+0x3>
+ b94:	6b ea       	ldi	r22, 0xAB	; 171
+ b96:	7a ea       	ldi	r23, 0xAA	; 170
+ b98:	8a e2       	ldi	r24, 0x2A	; 42
+ b9a:	90 e4       	ldi	r25, 0x40	; 64
+ b9c:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ ba0:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ ba4:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ ba8:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ bac:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
 		dz = float_add(temp, dz, SUB);
- ba0:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
- ba4:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
- ba8:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
- bac:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
- bb0:	c7 01       	movw	r24, r14
- bb2:	b6 01       	movw	r22, r12
- bb4:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- bb8:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- bbc:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- bc0:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- bc4:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+ bb0:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
+ bb4:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
+ bb8:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
+ bbc:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
+ bc0:	c7 01       	movw	r24, r14
+ bc2:	b6 01       	movw	r22, r12
+ bc4:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ bc8:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ bcc:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ bd0:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ bd4:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
 		dz = float_mult(dz, dt);
- bc8:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
- bcc:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
- bd0:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
- bd4:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
- bd8:	60 91 10 01 	lds	r22, 0x0110	; 0x800110 <__data_end>
- bdc:	70 91 11 01 	lds	r23, 0x0111	; 0x800111 <__data_end+0x1>
- be0:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <__data_end+0x2>
- be4:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <__data_end+0x3>
- be8:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
- bec:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
- bf0:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
- bf4:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
- bf8:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
+ bd8:	20 91 0c 01 	lds	r18, 0x010C	; 0x80010c <dt>
+ bdc:	30 91 0d 01 	lds	r19, 0x010D	; 0x80010d <dt+0x1>
+ be0:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dt+0x2>
+ be4:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dt+0x3>
+ be8:	60 91 10 01 	lds	r22, 0x0110	; 0x800110 <__data_end>
+ bec:	70 91 11 01 	lds	r23, 0x0111	; 0x800111 <__data_end+0x1>
+ bf0:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <__data_end+0x2>
+ bf4:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <__data_end+0x3>
+ bf8:	0e 94 7d 01 	call	0x2fa	; 0x2fa <float_mult>
+ bfc:	60 93 10 01 	sts	0x0110, r22	; 0x800110 <__data_end>
+ c00:	70 93 11 01 	sts	0x0111, r23	; 0x800111 <__data_end+0x1>
+ c04:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <__data_end+0x2>
+ c08:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <__data_end+0x3>
 		
 		x = float_add(x, dx, ADD);
- bfc:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
- c00:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
- c04:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
- c08:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
- c0c:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
- c10:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
- c14:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
- c18:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
- c1c:	00 e0       	ldi	r16, 0x00	; 0
- c1e:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- c22:	60 93 08 01 	sts	0x0108, r22	; 0x800108 <x>
- c26:	70 93 09 01 	sts	0x0109, r23	; 0x800109 <x+0x1>
- c2a:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <x+0x2>
- c2e:	90 93 0b 01 	sts	0x010B, r25	; 0x80010b <x+0x3>
+ c0c:	20 91 18 01 	lds	r18, 0x0118	; 0x800118 <dx>
+ c10:	30 91 19 01 	lds	r19, 0x0119	; 0x800119 <dx+0x1>
+ c14:	40 91 1a 01 	lds	r20, 0x011A	; 0x80011a <dx+0x2>
+ c18:	50 91 1b 01 	lds	r21, 0x011B	; 0x80011b <dx+0x3>
+ c1c:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <x>
+ c20:	70 91 09 01 	lds	r23, 0x0109	; 0x800109 <x+0x1>
+ c24:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <x+0x2>
+ c28:	90 91 0b 01 	lds	r25, 0x010B	; 0x80010b <x+0x3>
+ c2c:	00 e0       	ldi	r16, 0x00	; 0
+ c2e:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ c32:	60 93 08 01 	sts	0x0108, r22	; 0x800108 <x>
+ c36:	70 93 09 01 	sts	0x0109, r23	; 0x800109 <x+0x1>
+ c3a:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <x+0x2>
+ c3e:	90 93 0b 01 	sts	0x010B, r25	; 0x80010b <x+0x3>
 		y = float_add(y, dy, ADD);
- c32:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <dy>
- c36:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <dy+0x1>
- c3a:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <dy+0x2>
- c3e:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <dy+0x3>
- c42:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
- c46:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
- c4a:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
- c4e:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
- c52:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- c56:	60 93 04 01 	sts	0x0104, r22	; 0x800104 <y>
- c5a:	70 93 05 01 	sts	0x0105, r23	; 0x800105 <y+0x1>
- c5e:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <y+0x2>
- c62:	90 93 07 01 	sts	0x0107, r25	; 0x800107 <y+0x3>
+ c42:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <dy>
+ c46:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <dy+0x1>
+ c4a:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <dy+0x2>
+ c4e:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <dy+0x3>
+ c52:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <y>
+ c56:	70 91 05 01 	lds	r23, 0x0105	; 0x800105 <y+0x1>
+ c5a:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <y+0x2>
+ c5e:	90 91 07 01 	lds	r25, 0x0107	; 0x800107 <y+0x3>
+ c62:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ c66:	60 93 04 01 	sts	0x0104, r22	; 0x800104 <y>
+ c6a:	70 93 05 01 	sts	0x0105, r23	; 0x800105 <y+0x1>
+ c6e:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <y+0x2>
+ c72:	90 93 07 01 	sts	0x0107, r25	; 0x800107 <y+0x3>
 		z = float_add(z, dz, ADD);
- c66:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
- c6a:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
- c6e:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
- c72:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
- c76:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <__data_start>
- c7a:	70 91 01 01 	lds	r23, 0x0101	; 0x800101 <__data_start+0x1>
- c7e:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_start+0x2>
- c82:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <__data_start+0x3>
- c86:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
- c8a:	60 93 00 01 	sts	0x0100, r22	; 0x800100 <__data_start>
- c8e:	70 93 01 01 	sts	0x0101, r23	; 0x800101 <__data_start+0x1>
- c92:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_start+0x2>
- c96:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <__data_start+0x3>
- c9a:	a9 ce       	rjmp	.-686    	; 0x9ee <__stack+0xef>
+ c76:	20 91 10 01 	lds	r18, 0x0110	; 0x800110 <__data_end>
+ c7a:	30 91 11 01 	lds	r19, 0x0111	; 0x800111 <__data_end+0x1>
+ c7e:	40 91 12 01 	lds	r20, 0x0112	; 0x800112 <__data_end+0x2>
+ c82:	50 91 13 01 	lds	r21, 0x0113	; 0x800113 <__data_end+0x3>
+ c86:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <__data_start>
+ c8a:	70 91 01 01 	lds	r23, 0x0101	; 0x800101 <__data_start+0x1>
+ c8e:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_start+0x2>
+ c92:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <__data_start+0x3>
+ c96:	0e 94 53 00 	call	0xa6	; 0xa6 <float_add>
+ c9a:	60 93 00 01 	sts	0x0100, r22	; 0x800100 <__data_start>
+ c9e:	70 93 01 01 	sts	0x0101, r23	; 0x800101 <__data_start+0x1>
+ ca2:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_start+0x2>
+ ca6:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <__data_start+0x3>
+ caa:	a9 ce       	rjmp	.-686    	; 0x9fe <__stack+0xff>
 
-00000c9c <__ashldi3>:
- c9c:	0f 93       	push	r16
- c9e:	08 30       	cpi	r16, 0x08	; 8
- ca0:	90 f0       	brcs	.+36     	; 0xcc6 <__ashldi3+0x2a>
- ca2:	98 2f       	mov	r25, r24
- ca4:	87 2f       	mov	r24, r23
- ca6:	76 2f       	mov	r23, r22
- ca8:	65 2f       	mov	r22, r21
- caa:	54 2f       	mov	r21, r20
- cac:	43 2f       	mov	r20, r19
- cae:	32 2f       	mov	r19, r18
- cb0:	22 27       	eor	r18, r18
- cb2:	08 50       	subi	r16, 0x08	; 8
- cb4:	f4 cf       	rjmp	.-24     	; 0xc9e <__ashldi3+0x2>
- cb6:	22 0f       	add	r18, r18
- cb8:	33 1f       	adc	r19, r19
- cba:	44 1f       	adc	r20, r20
- cbc:	55 1f       	adc	r21, r21
- cbe:	66 1f       	adc	r22, r22
- cc0:	77 1f       	adc	r23, r23
- cc2:	88 1f       	adc	r24, r24
- cc4:	99 1f       	adc	r25, r25
- cc6:	0a 95       	dec	r16
- cc8:	b2 f7       	brpl	.-20     	; 0xcb6 <__ashldi3+0x1a>
- cca:	0f 91       	pop	r16
- ccc:	08 95       	ret
+00000cac <__ashldi3>:
+ cac:	0f 93       	push	r16
+ cae:	08 30       	cpi	r16, 0x08	; 8
+ cb0:	90 f0       	brcs	.+36     	; 0xcd6 <__ashldi3+0x2a>
+ cb2:	98 2f       	mov	r25, r24
+ cb4:	87 2f       	mov	r24, r23
+ cb6:	76 2f       	mov	r23, r22
+ cb8:	65 2f       	mov	r22, r21
+ cba:	54 2f       	mov	r21, r20
+ cbc:	43 2f       	mov	r20, r19
+ cbe:	32 2f       	mov	r19, r18
+ cc0:	22 27       	eor	r18, r18
+ cc2:	08 50       	subi	r16, 0x08	; 8
+ cc4:	f4 cf       	rjmp	.-24     	; 0xcae <__ashldi3+0x2>
+ cc6:	22 0f       	add	r18, r18
+ cc8:	33 1f       	adc	r19, r19
+ cca:	44 1f       	adc	r20, r20
+ ccc:	55 1f       	adc	r21, r21
+ cce:	66 1f       	adc	r22, r22
+ cd0:	77 1f       	adc	r23, r23
+ cd2:	88 1f       	adc	r24, r24
+ cd4:	99 1f       	adc	r25, r25
+ cd6:	0a 95       	dec	r16
+ cd8:	b2 f7       	brpl	.-20     	; 0xcc6 <__ashldi3+0x1a>
+ cda:	0f 91       	pop	r16
+ cdc:	08 95       	ret
 
-00000cce <__ashrdi3>:
- cce:	97 fb       	bst	r25, 7
- cd0:	10 f8       	bld	r1, 0
+00000cde <__ashrdi3>:
+ cde:	97 fb       	bst	r25, 7
+ ce0:	10 f8       	bld	r1, 0
 
-00000cd2 <__lshrdi3>:
- cd2:	16 94       	lsr	r1
- cd4:	00 08       	sbc	r0, r0
- cd6:	0f 93       	push	r16
- cd8:	08 30       	cpi	r16, 0x08	; 8
- cda:	98 f0       	brcs	.+38     	; 0xd02 <__lshrdi3+0x30>
- cdc:	08 50       	subi	r16, 0x08	; 8
- cde:	23 2f       	mov	r18, r19
- ce0:	34 2f       	mov	r19, r20
- ce2:	45 2f       	mov	r20, r21
- ce4:	56 2f       	mov	r21, r22
- ce6:	67 2f       	mov	r22, r23
- ce8:	78 2f       	mov	r23, r24
- cea:	89 2f       	mov	r24, r25
- cec:	90 2d       	mov	r25, r0
- cee:	f4 cf       	rjmp	.-24     	; 0xcd8 <__lshrdi3+0x6>
- cf0:	05 94       	asr	r0
- cf2:	97 95       	ror	r25
- cf4:	87 95       	ror	r24
- cf6:	77 95       	ror	r23
- cf8:	67 95       	ror	r22
- cfa:	57 95       	ror	r21
- cfc:	47 95       	ror	r20
- cfe:	37 95       	ror	r19
- d00:	27 95       	ror	r18
- d02:	0a 95       	dec	r16
- d04:	aa f7       	brpl	.-22     	; 0xcf0 <__lshrdi3+0x1e>
- d06:	0f 91       	pop	r16
- d08:	08 95       	ret
+00000ce2 <__lshrdi3>:
+ ce2:	16 94       	lsr	r1
+ ce4:	00 08       	sbc	r0, r0
+ ce6:	0f 93       	push	r16
+ ce8:	08 30       	cpi	r16, 0x08	; 8
+ cea:	98 f0       	brcs	.+38     	; 0xd12 <__lshrdi3+0x30>
+ cec:	08 50       	subi	r16, 0x08	; 8
+ cee:	23 2f       	mov	r18, r19
+ cf0:	34 2f       	mov	r19, r20
+ cf2:	45 2f       	mov	r20, r21
+ cf4:	56 2f       	mov	r21, r22
+ cf6:	67 2f       	mov	r22, r23
+ cf8:	78 2f       	mov	r23, r24
+ cfa:	89 2f       	mov	r24, r25
+ cfc:	90 2d       	mov	r25, r0
+ cfe:	f4 cf       	rjmp	.-24     	; 0xce8 <__lshrdi3+0x6>
+ d00:	05 94       	asr	r0
+ d02:	97 95       	ror	r25
+ d04:	87 95       	ror	r24
+ d06:	77 95       	ror	r23
+ d08:	67 95       	ror	r22
+ d0a:	57 95       	ror	r21
+ d0c:	47 95       	ror	r20
+ d0e:	37 95       	ror	r19
+ d10:	27 95       	ror	r18
+ d12:	0a 95       	dec	r16
+ d14:	aa f7       	brpl	.-22     	; 0xd00 <__lshrdi3+0x1e>
+ d16:	0f 91       	pop	r16
+ d18:	08 95       	ret
 
-00000d0a <__adddi3>:
- d0a:	2a 0d       	add	r18, r10
- d0c:	3b 1d       	adc	r19, r11
- d0e:	4c 1d       	adc	r20, r12
- d10:	5d 1d       	adc	r21, r13
- d12:	6e 1d       	adc	r22, r14
- d14:	7f 1d       	adc	r23, r15
- d16:	80 1f       	adc	r24, r16
- d18:	91 1f       	adc	r25, r17
- d1a:	08 95       	ret
+00000d1a <__adddi3>:
+ d1a:	2a 0d       	add	r18, r10
+ d1c:	3b 1d       	adc	r19, r11
+ d1e:	4c 1d       	adc	r20, r12
+ d20:	5d 1d       	adc	r21, r13
+ d22:	6e 1d       	adc	r22, r14
+ d24:	7f 1d       	adc	r23, r15
+ d26:	80 1f       	adc	r24, r16
+ d28:	91 1f       	adc	r25, r17
+ d2a:	08 95       	ret
 
-00000d1c <__adddi3_s8>:
- d1c:	00 24       	eor	r0, r0
- d1e:	a7 fd       	sbrc	r26, 7
- d20:	00 94       	com	r0
- d22:	2a 0f       	add	r18, r26
- d24:	30 1d       	adc	r19, r0
- d26:	40 1d       	adc	r20, r0
- d28:	50 1d       	adc	r21, r0
- d2a:	60 1d       	adc	r22, r0
- d2c:	70 1d       	adc	r23, r0
- d2e:	80 1d       	adc	r24, r0
- d30:	90 1d       	adc	r25, r0
- d32:	08 95       	ret
+00000d2c <__adddi3_s8>:
+ d2c:	00 24       	eor	r0, r0
+ d2e:	a7 fd       	sbrc	r26, 7
+ d30:	00 94       	com	r0
+ d32:	2a 0f       	add	r18, r26
+ d34:	30 1d       	adc	r19, r0
+ d36:	40 1d       	adc	r20, r0
+ d38:	50 1d       	adc	r21, r0
+ d3a:	60 1d       	adc	r22, r0
+ d3c:	70 1d       	adc	r23, r0
+ d3e:	80 1d       	adc	r24, r0
+ d40:	90 1d       	adc	r25, r0
+ d42:	08 95       	ret
 
-00000d34 <__cmpdi2_s8>:
- d34:	00 24       	eor	r0, r0
- d36:	a7 fd       	sbrc	r26, 7
- d38:	00 94       	com	r0
- d3a:	2a 17       	cp	r18, r26
- d3c:	30 05       	cpc	r19, r0
- d3e:	40 05       	cpc	r20, r0
- d40:	50 05       	cpc	r21, r0
- d42:	60 05       	cpc	r22, r0
- d44:	70 05       	cpc	r23, r0
- d46:	80 05       	cpc	r24, r0
- d48:	90 05       	cpc	r25, r0
- d4a:	08 95       	ret
+00000d44 <__cmpdi2_s8>:
+ d44:	00 24       	eor	r0, r0
+ d46:	a7 fd       	sbrc	r26, 7
+ d48:	00 94       	com	r0
+ d4a:	2a 17       	cp	r18, r26
+ d4c:	30 05       	cpc	r19, r0
+ d4e:	40 05       	cpc	r20, r0
+ d50:	50 05       	cpc	r21, r0
+ d52:	60 05       	cpc	r22, r0
+ d54:	70 05       	cpc	r23, r0
+ d56:	80 05       	cpc	r24, r0
+ d58:	90 05       	cpc	r25, r0
+ d5a:	08 95       	ret
 
-00000d4c <_exit>:
- d4c:	f8 94       	cli
+00000d5c <_exit>:
+ d5c:	f8 94       	cli
 
-00000d4e <__stop_program>:
- d4e:	ff cf       	rjmp	.-2      	; 0xd4e <__stop_program>
+00000d5e <__stop_program>:
+ d5e:	ff cf       	rjmp	.-2      	; 0xd5e <__stop_program>

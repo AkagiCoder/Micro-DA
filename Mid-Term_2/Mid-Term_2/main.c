@@ -9,16 +9,33 @@
 #include <avr/interrupt.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include "nrf24l01-mnemonics.h"
+#include "nrf24l01.h"
 
+#define F_CPU 16000000UL		// CPU Speed for delay
 #define FOSC 16000000			// Clock speed
 #define BAUD 115200				// Desire baud rate
 #define MYUBRR FOSC/8/BAUD-1	// Formula to set the baud rate
 
 volatile uint8_t ADCvalue;
-void UART_TX(char data);
+volatile bool trans_msg = false;
+volatile uint8_t i = 0;			// Iterative variable
+volatile char temp[4];			// Temperature variable
+
+void UART_TX(char *data);
+
+nRF24L01 *setup_rf(void);
 
 int main(void)
-{
+{	
+	// nRF
+	nRF24L01 *rf;
+	nRF24L01Message msg;		// Data to send to the RF
+	uint8_t to_address[5] = { 0x01, 0x01, 0x01, 0x01, 0x01 };
+	char *TEMP = temp;
+
 	// Port declaration
 	DDRB |= (1 << 1);			// Set PB.1 as output
 	
@@ -45,34 +62,73 @@ int main(void)
 	TCCR1A = 0;					// Not used
 	TCCR1B |= (1 << CS12) | (1 << CS10);	// Prescalar of 1024
 	TCCR1C = 0;					// Not used
-	sei();						// Enable gloabl interrupts
+	sei();						// Enable global interrupts
+	
+	rf = setup_rf();			// Initialize the rf
 	
     while (1) 
     {
 		while((ADCSRA & (1 << ADIF)) == 0);		// Wait for ADC conversion
 		ADCvalue = (ADCH << 1);					// Assign the temperature
+		
+		// Verify if the temperature is ready to be transmitted
+		if(trans_msg == true)
+		{
+			trans_msg = false;
+			memcpy(msg.data, TEMP, i);					// Copy temperature to nRF message struct
+			msg.length = strlen((char *)msg.data) + 1;	// Obtain the length of the string
+			nRF24L01_transmit(rf, to_address, &msg);	// Transmit to the RF
+		}
     }
 }
 
 ISR(TIMER1_OVF_vect)
 {
-	uint8_t i = 0;						// Iterative variable
-	char temp[3];						// Temperature variable
+	char LF = '\n';						// Line Feed
+	i = 0;								// Reset iteration
 	
 	TIFR1 = (1 << TOV1);				// Clear TOV1 flag
 	TCNT1 = 49911;						// Reset TCNT1
 	PORTB ^= (1 << 1);					// Toggle LED
 	itoa(ADCvalue, temp, 10);			// Convert integer value into ASCII
 	
-	// Transmit the temperature to terminal
-	for(i = 0; i < 3; i++)
-		UART_TX(temp[i]);				// Temperature [ASCII]
-	UART_TX('\n');						// Line feed
+	// Send temperature via UART to terminal
+	while(temp[i] != 0)
+	{
+		UART_TX(&temp[i]);
+		i++;
+	}
+	UART_TX(&LF);
+	/*
+	// Send temperature to RF module
+	memcpy(msg.data, temp, i);					// Copy temperature to nRF message struct
+	msg.length = strlen((char *)msg.data) + 1;	// Obtain the length of the string
+	nRF24L01_transmit(rf, to_address, &msg);	// Transmit to the RF
+	*/
+	trans_msg = true;
 }
 
 // Function to transmit a byte of data via UART
-void UART_TX(char data)
+void UART_TX(char *data)
 {
 	while(!(UCSR0A & (1 << UDRE0)));	// Wait for UART to be available
-	UDR0 = data;						// Send the data
+	UDR0 = *data;						// Send the data
+}
+
+// Set up nRF24L01
+nRF24L01 *setup_rf(void)
+{
+    nRF24L01 *rf = nRF24L01_init();
+    rf->ss.port = &PORTB;
+    rf->ss.pin = PB2;
+    rf->ce.port = &PORTB;
+    rf->ce.pin = PB1;
+    rf->sck.port = &PORTB;
+    rf->sck.pin = PB5;
+    rf->mosi.port = &PORTB;
+    rf->mosi.pin = PB3;
+    rf->miso.port = &PORTB;
+    rf->miso.pin = PB4;
+    nRF24L01_begin(rf);
+    return rf;
 }

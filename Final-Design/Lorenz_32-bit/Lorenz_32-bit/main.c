@@ -15,23 +15,59 @@ volatile uint32_t num2 = 0x00000000;
 
 // Lorenz derivatives
 volatile uint32_t dt = 0x3c23d70a;	// 0.01
-volatile uint32_t dx = 0x00000000;
-volatile uint32_t dy = 0x00000000;
-volatile uint32_t dz = 0x00000000;
+volatile uint32_t dx = 0x00000000;	// Cleared
+volatile uint32_t dy = 0x00000000;	// Cleared
+volatile uint32_t dz = 0x00000000;	// Cleared
 
 // Coordinates
 volatile uint32_t x = 0x3f800000;	// x = 1.0
 volatile uint32_t y = 0x3f800000;	// y = 1.0
 volatile uint32_t z = 0x3f800000;	// z = 1.0
 
+// Floating Point Operators
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP);
 uint32_t float_mult(uint32_t M, uint32_t R);
+
+// I2C Functions
+void i2c_init(void);
+void i2c_write(unsigned char data);
+void i2c_start(void);
+void i2c_stop(void);
 
 int main(void)
 {
 	uint32_t j = 0;
+	uint32_t i = 0;
 	uint32_t temp;
-	for(j = 0; j < 101; j++)
+	for(i = 0; i < 100; i++)
+	{
+		for(j = 0; j < 100; j++)
+		{
+			// dx/dt = SIGMA(y-x)
+			dx = float_add(y, x, SUB);
+			dx = float_mult(SIGMA, dx);
+			dx = float_mult(dx, dt);
+				
+			// dy/dt = x(RHO-z)-y
+			dy = float_add(RHO, z, SUB);
+			dy = float_mult(dy, x);
+			dy = float_add(dy, y, SUB);
+			dy = float_mult(dy, dt);
+				
+			// dz/dt = xy-(BETA)z
+			temp = float_mult(x, y);
+			dz = float_mult(BETA, z);
+			dz = float_add(temp, dz, SUB);
+			dz = float_mult(dz, dt);
+				
+			x = float_add(x, dx, ADD);
+			y = float_add(y, dy, ADD);
+			z = float_add(z, dz, ADD);
+		}
+			
+	}
+	/*
+	for(j = 0; j < 100; j++)
 	{
 		// dx/dt = SIGMA(y-x)
 		dx = float_add(y, x, SUB);
@@ -54,6 +90,7 @@ int main(void)
 		y = float_add(y, dy, ADD);
 		z = float_add(z, dz, ADD);
 	}
+	*/
 	
     while (1) 
     {
@@ -79,6 +116,10 @@ int main(void)
 		z = float_add(z, dz, ADD);
     }
 }
+
+//-------------------------------------------------
+//------------- FLOATING POINT FUNCTIONS ----------
+//-------------------------------------------------
 
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 {
@@ -321,4 +362,52 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 	mant0 &= 0x007FFFFF;		// Extract the final mantissa
 	final |= mant0;				// Insert the mantissa into final
 	return final;
+}
+
+//-------------------------------------------------
+//----------------I2C FUNCTIONS--------------------
+//-------------------------------------------------
+
+// Data Packet
+// | STA | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 || ACK || 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 || ACK || D11 | D10 | D9 | D8 | D7 | D6 | D5 | D4 || ACK || D3 | D2 | D1 | D0 | 0 | 0 | 0 | 0 || ACK | STO |
+//                        A2  A1  A0  R/W		  C2  C1  C0   x   x  PD1 PD0  x
+
+// First DAC
+void dac_0(unsigned int input)
+{
+	i2c_start();
+	i2c_write(0b11000000);
+	i2c_write(0b01000000);
+	i2c_write(input >> 4);
+	i2c_write(input);
+	i2c_stop();
+}
+
+// I2C initialization
+void i2c_init(void)
+{
+	TWSR = 0x00;										// Set prescalar to 0
+	TWBR = 0x48;										// SCL = 50 KHz (Fosc = 8 MHz)
+	TWCR = (1 << TWEN);									// Enable TWI
+}
+
+// Write to the I2C
+void i2c_write(unsigned char data)
+{
+	TWDR = data;										// Data to be transmitted
+	TWCR = (1 << TWINT) | (1 << TWEN);					// Use TWI module and write
+	while((TWCR & (1 << TWINT)) == 0);					// Wait for TWI to complete
+}
+
+// I2C start condition
+void i2c_start(void)
+{
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);	// Transmit START condition
+	while((TWCR & (1 << TWINT)) == 0);					// Wait for TWI to complete
+}
+
+// I2C stop condition
+void i2c_stop(void)
+{
+	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Transmit STOP condition
 }

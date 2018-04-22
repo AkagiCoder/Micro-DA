@@ -139,6 +139,15 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="nrf24l01-mnemonics.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="nrf24l01.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="nrf24l01.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
