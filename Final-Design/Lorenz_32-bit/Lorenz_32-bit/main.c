@@ -5,8 +5,12 @@
 //volatile uint32_t num1 = 0x42360000;	// 45.5
 volatile uint32_t num2 = 0x00000000;
 
+// Operations [float_add]
 #define SUB		1
 #define ADD		0
+
+// Adjust DAC prescalar output
+#define SCALE	6 // 64
 
 // Lorenz constants
 #define SIGMA	0x41200000		// 10
@@ -27,6 +31,7 @@ volatile uint32_t z = 0x3f800000;	// z = 1.0
 // Floating Point Operators
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP);
 uint32_t float_mult(uint32_t M, uint32_t R);
+uint16_t float_digital(uint32_t Num);
 
 // I2C Functions
 void i2c_init(void);
@@ -34,14 +39,19 @@ void i2c_write(unsigned char data);
 void i2c_start(void);
 void i2c_stop(void);
 
+volatile uint32_t j = 0;
+volatile uint32_t k = 27;
+volatile uint16_t output;
+
 int main(void)
 {
-	uint32_t j = 0;
+	//uint32_t j = 0;
 	uint32_t i = 0;
 	uint32_t temp;
+	
 	for(i = 0; i < 100; i++)
 	{
-		for(j = 0; j < 100; j++)
+		for(j = 0; j < k; j++)
 		{
 			// dx/dt = SIGMA(y-x)
 			dx = float_add(y, x, SUB);
@@ -63,34 +73,12 @@ int main(void)
 			x = float_add(x, dx, ADD);
 			y = float_add(y, dy, ADD);
 			z = float_add(z, dz, ADD);
+			
+			output = float_digital(y);
+			output += 0;
 		}
 			
 	}
-	/*
-	for(j = 0; j < 100; j++)
-	{
-		// dx/dt = SIGMA(y-x)
-		dx = float_add(y, x, SUB);
-		dx = float_mult(SIGMA, dx);
-		dx = float_mult(dx, dt);
-		
-		// dy/dt = x(RHO-z)-y
-		dy = float_add(RHO, z, SUB);
-		dy = float_mult(dy, x);
-		dy = float_add(dy, y, SUB);
-		dy = float_mult(dy, dt);
-		
-		// dz/dt = xy-(BETA)z
-		temp = float_mult(x, y);
-		dz = float_mult(BETA, z);
-		dz = float_add(temp, dz, SUB);
-		dz = float_mult(dz, dt);
-		
-		x = float_add(x, dx, ADD);
-		y = float_add(y, dy, ADD);
-		z = float_add(z, dz, ADD);
-	}
-	*/
 	
     while (1) 
     {
@@ -121,6 +109,7 @@ int main(void)
 //------------- FLOATING POINT FUNCTIONS ----------
 //-------------------------------------------------
 
+// Floating point addition/subtraction
 uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 {
 	// Save function arguments
@@ -247,6 +236,7 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 	return final;
 }
 
+// Floating point multiplication
 uint32_t float_mult(uint32_t M, uint32_t R)
 {
 	// Save function arguments
@@ -361,6 +351,40 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 	mant0 = P;
 	mant0 &= 0x007FFFFF;		// Extract the final mantissa
 	final |= mant0;				// Insert the mantissa into final
+	return final;
+}
+
+uint16_t float_digital(uint32_t Num)
+{
+	uint32_t a = Num;
+	
+	uint16_t final = 0;
+	int8_t temp = (a >> 23) - 127;
+	uint64_t mant = (a & 0x007FFFFF) | 0x00800000;
+	
+	// Denormalize the floating point
+	while(temp != 0)
+	{
+		if(temp > 0)
+		{
+			temp--;
+			mant = mant << 1; 
+		}
+		else if(temp < 0)
+		{
+			temp++;
+			mant = mant >> 1;
+		}
+	}
+	mant = mant << SCALE;		// Scale the value
+	
+	// Check the sign
+	if((a & 0x8000000000000000) == 0x8000000000000000)
+		final |= 0xC000;		// Negative
+	else
+		final |= 0x3000;		// Positive
+	mant = mant >> 23;
+	final |= mant & 0x0000000000000FFF;
 	return final;
 }
 
