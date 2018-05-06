@@ -1,5 +1,8 @@
+#define F_CPU 16000000UL
+
 #include <avr/io.h>
 #include <stdint.h>
+#include <util/delay.h>
 
 //volatile uint32_t num0 = 0x41820000;	// 16.25
 //volatile uint32_t num1 = 0x42360000;	// 45.5
@@ -10,7 +13,7 @@ volatile uint32_t num2 = 0x00000000;
 #define ADD		0
 
 // Adjust DAC prescalar output
-#define SCALE	6 // 64
+#define SCALE	5 // 64
 
 // Lorenz constants
 #define SIGMA	0x41200000		// 10
@@ -39,49 +42,23 @@ void i2c_write(unsigned char data);
 void i2c_start(void);
 void i2c_stop(void);
 
+void dac_0(unsigned int input);
+
 volatile uint32_t j = 0;
 volatile uint32_t k = 27;
-volatile uint16_t output;
+volatile uint16_t num_out;
 
 int main(void)
 {
-	//uint32_t j = 0;
-	uint32_t i = 0;
-	uint32_t temp;
+	//uint32_t temp;
 	
-	for(i = 0; i < 100; i++)
-	{
-		for(j = 0; j < k; j++)
-		{
-			// dx/dt = SIGMA(y-x)
-			dx = float_add(y, x, SUB);
-			dx = float_mult(SIGMA, dx);
-			dx = float_mult(dx, dt);
-				
-			// dy/dt = x(RHO-z)-y
-			dy = float_add(RHO, z, SUB);
-			dy = float_mult(dy, x);
-			dy = float_add(dy, y, SUB);
-			dy = float_mult(dy, dt);
-				
-			// dz/dt = xy-(BETA)z
-			temp = float_mult(x, y);
-			dz = float_mult(BETA, z);
-			dz = float_add(temp, dz, SUB);
-			dz = float_mult(dz, dt);
-				
-			x = float_add(x, dx, ADD);
-			y = float_add(y, dy, ADD);
-			z = float_add(z, dz, ADD);
-			
-			output = float_digital(y);
-			output += 0;
-		}
-			
-	}
+	i2c_init();
 	
     while (1) 
     {
+		dac_0(2048);
+		_delay_ms(3000);
+		/*
 		// dx/dt = SIGMA(y-x)
 		dx = float_add(y, x, SUB);
 		dx = float_mult(SIGMA, dx);
@@ -102,6 +79,8 @@ int main(void)
 		x = float_add(x, dx, ADD);
 		y = float_add(y, dy, ADD);
 		z = float_add(z, dz, ADD);
+		
+		*/
     }
 }
 
@@ -377,14 +356,15 @@ uint16_t float_digital(uint32_t Num)
 		}
 	}
 	mant = mant << SCALE;		// Scale the value
-	
-	// Check the sign
-	if((a & 0x8000000000000000) == 0x8000000000000000)
-		final |= 0xC000;		// Negative
-	else
-		final |= 0x3000;		// Positive
+
 	mant = mant >> 23;
 	final |= mant & 0x0000000000000FFF;
+	/*
+	if((a & 0x80000000) == 0x80000000)
+		final = 0x0400 - final;		// Negative
+	else
+		final = 0x0400 + final;		// Positive
+	*/
 	return final;
 }
 
