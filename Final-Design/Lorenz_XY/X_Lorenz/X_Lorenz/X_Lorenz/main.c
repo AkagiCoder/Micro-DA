@@ -4,10 +4,6 @@
 #include <stdint.h>
 #include <util/delay.h>
 
-//volatile uint32_t num0 = 0x41820000;	// 16.25
-//volatile uint32_t num1 = 0x42360000;	// 45.5
-volatile uint32_t num2 = 0x00000000;
-
 // Operations [float_add]
 #define SUB		1
 #define ADD		0
@@ -42,7 +38,7 @@ void i2c_write(unsigned char data);
 void i2c_start(void);
 void i2c_stop(void);
 
-void dac_0(unsigned int input);
+void dac(unsigned int input);
 
 volatile uint32_t j = 0;
 volatile uint32_t k = 27;
@@ -50,38 +46,46 @@ volatile uint16_t num_out;
 
 int main(void)
 {
-	//uint32_t temp;
+	uint32_t temp;		// Temporary variable
+	uint32_t osc_out;	// Value to output to the DAC
+	uint16_t i;			// Iterative variable
 	
-	i2c_init();
+	DDRB = (1 << 1);	// PB1
 	
-    while (1) 
-    {
-		dac_0(2048);
-		_delay_ms(3000);
-		/*
-		// dx/dt = SIGMA(y-x)
-		dx = float_add(y, x, SUB);
-		dx = float_mult(SIGMA, dx);
-		dx = float_mult(dx, dt);
-		
-		// dy/dt = x(RHO-z)-y
-		dy = float_add(RHO, z, SUB);
-		dy = float_mult(dy, x);
-		dy = float_add(dy, y, SUB);
-		dy = float_mult(dy, dt);
-		
-		// dz/dt = xy-(BETA)z
-		temp = float_mult(x, y);
-		dz = float_mult(BETA, z);
-		dz = float_add(temp, dz, SUB);
-		dz = float_mult(dz, dt);
-		
-		x = float_add(x, dx, ADD);
-		y = float_add(y, dy, ADD);
-		z = float_add(z, dz, ADD);
-		
-		*/
-    }
+	i2c_init();			// Initialize the I2C
+
+	_delay_ms(5000);
+	while (1)
+	{
+		for(i = 0; i < 1000; i++) {
+			// dx/dt = SIGMA(y-x)
+			dx = float_add(y, x, SUB);
+			dx = float_mult(SIGMA, dx);
+			dx = float_mult(dx, dt);
+			
+			// dy/dt = x(RHO-z)-y
+			dy = float_add(RHO, z, SUB);
+			dy = float_mult(dy, x);
+			dy = float_add(dy, y, SUB);
+			dy = float_mult(dy, dt);
+			
+			// dz/dt = xy-(BETA)z
+			temp = float_mult(x, y);
+			dz = float_mult(BETA, z);
+			dz = float_add(temp, dz, SUB);
+			dz = float_mult(dz, dt);
+			
+			x = float_add(x, dx, ADD);		// Update the change to X
+			y = float_add(y, dy, ADD);		// Update the change to Y
+			z = float_add(z, dz, ADD);		// Update the change to Z
+			
+			osc_out = float_digital(x);		// Output X
+			PORTB = (1 << 1);
+			while((PINB & 0x4) != 0x4);
+			PORTB = 0x0;
+			dac(osc_out);
+		}
+	}
 }
 
 //-------------------------------------------------
@@ -114,7 +118,7 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 	
 	// Check if the operation is subtraction
 	if(sub > 0)
-		b ^= 0x80000000;
+	b ^= 0x80000000;
 	
 	// Adjust and compute the exponent
 	if(exp0 > exp1)						// exp(a) > exp(b)
@@ -188,7 +192,7 @@ uint32_t float_add(uint32_t A, uint32_t B, uint8_t OP)
 			}
 		}
 		else
-			exp = 0;
+		exp = 0;
 	}
 	
 	// Overflow case [Largest value]
@@ -246,8 +250,8 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 	// Compute the initial exponent
 	exp = (exp0 + exp1) - 127;						// Add the exponents and subtract 127 [rid the redundant bias]
 	if(exp > 0x00FF)								// Early check for overflow
-		return final |= (0x7FFFFFFF);
-		
+	return final |= (0x7FFFFFFF);
+	
 	// Multiply the mantissas using Booth's algorithm
 	// m = mant0		x = 25 bits
 	// r = mant1		y = 25 bits
@@ -289,7 +293,7 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 		}
 		// Shift positive number
 		else
-			P = P >> 1;
+		P = P >> 1;
 	}
 	P = P >> 1;		// One last shift to complete the Booth algorithm
 	
@@ -307,8 +311,8 @@ uint32_t float_mult(uint32_t M, uint32_t R)
 
 	// Truncate
 	while(P >= 0x0000000001000000)
-		P = P >> 1;
-		
+	P = P >> 1;
+	
 	// Overflow case [Largest value]
 	// Exponent cannot be larger than 254 [with bias of +127]
 	if(exp > 254)
@@ -347,7 +351,7 @@ uint16_t float_digital(uint32_t Num)
 		if(temp > 0)
 		{
 			temp--;
-			mant = mant << 1; 
+			mant = mant << 1;
 		}
 		else if(temp < 0)
 		{
@@ -359,12 +363,12 @@ uint16_t float_digital(uint32_t Num)
 
 	mant = mant >> 23;
 	final |= mant & 0x0000000000000FFF;
-	/*
+	
 	if((a & 0x80000000) == 0x80000000)
-		final = 0x0400 - final;		// Negative
+	final = 0x07FF - final;		// Negative
 	else
-		final = 0x0400 + final;		// Positive
-	*/
+	final = 0x07FF + final;		// Positive
+	
 	return final;
 }
 
@@ -376,8 +380,8 @@ uint16_t float_digital(uint32_t Num)
 // | STA | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 || ACK || 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 || ACK || D11 | D10 | D9 | D8 | D7 | D6 | D5 | D4 || ACK || D3 | D2 | D1 | D0 | 0 | 0 | 0 | 0 || ACK | STO |
 //                        A2  A1  A0  R/W		  C2  C1  C0   x   x  PD1 PD0  x
 
-// First DAC
-void dac_0(unsigned int input)
+// DAC function
+void dac(unsigned int input)
 {
 	i2c_start();
 	i2c_write(0b11000000);
